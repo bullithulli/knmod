@@ -1,0 +1,2 @@
+#Compilation
+mvn clean install
