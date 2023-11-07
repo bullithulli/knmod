@@ -36,8 +36,11 @@ public class knmod {
             return true;
         }
         if (trimmedLine.contains(":") && trimmedLine.contains("#")) {
+            //            else: ### ERROR: else
+            //temp stores=else: ##
+            String temp = trimmedLine.substring(0, trimmedLine.lastIndexOf("#")); //get string without comments
             // label car: #somecomments
-            return trimmedLine.lastIndexOf(':') < trimmedLine.lastIndexOf('#');
+            return temp.lastIndexOf(':') < trimmedLine.lastIndexOf('#');
         }
         return false;
     }
@@ -93,7 +96,7 @@ public class knmod {
             // example
             //init python:
             //      print("hello world")
-            if (untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || (untrimmedline.startsWith("init ") && untrimmedline.endsWith(":"))) {
+            if (untrimmedline.startsWith("while ") || untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || (untrimmedline.startsWith("init ") && untrimmedline.endsWith(":"))) {
                 writeLineToDisk(untrimmedline, fw);
                 parentFunctionBlockWhiteSpaceSize = 0;
                 insideFunctionBlockThatShouldRun = true;
@@ -102,7 +105,7 @@ public class knmod {
             }
 
 
-            if (trimmedLine.equalsIgnoreCase("return") || trimmedLine.startsWith("jump ") || trimmedLine.startsWith("call ") || trimmedLine.contains("renpy.quit")) {
+            if (trimmedLine.startsWith("return") || trimmedLine.startsWith("jump ") || trimmedLine.startsWith("call ") || trimmedLine.contains("renpy.quit")) {
                 writeLineToDisk(knmodSay(trimmedLine), fw);
                 continue;
             }
@@ -112,7 +115,7 @@ public class knmod {
             // Handle functionBlock
             if (isBeginningOfFunctionBlock(trimmedLine) && !forceSkipSection) {
                 //Non echoble
-                if ((trimmedLine.startsWith("if ") || trimmedLine.startsWith("if:")) || (trimmedLine.startsWith("else ") || trimmedLine.startsWith("else:")) || (trimmedLine.startsWith("elif ") || trimmedLine.startsWith("elif:")) || trimmedLine.startsWith("label ") || (trimmedLine.startsWith("menu ") || trimmedLine.startsWith("menu:")) || trimmedLine.startsWith("\"")) {
+                if ((trimmedLine.startsWith("if ") || trimmedLine.startsWith("if:")) || (trimmedLine.startsWith("else ") || trimmedLine.startsWith("else:")) || (trimmedLine.startsWith("elif ") || trimmedLine.startsWith("elif:")) || trimmedLine.startsWith("label ") || (trimmedLine.startsWith("menu ") || trimmedLine.startsWith("menu(") || trimmedLine.startsWith("menu:")) || trimmedLine.startsWith("\"")) {
                     parentFunctionBlockWhiteSpaceSize = 0;
                     insideFunctionBlockThatShouldRun = false;
                     writeLineToDisk(knmodSay(trimmedLine), fw);

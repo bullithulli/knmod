@@ -20,8 +20,17 @@ public class textUtils {
         return str.replaceAll("\"", "").replaceAll("'", "");
     }
 
+
     public static String removeBrackets(String str) {
         return str.replaceAll("\\(", "").replaceAll("\\)", "");
+    }
+
+    public static String removeFlowerBrackets(String str) {
+        return str.replaceAll("\\{", "").replaceAll("\\}", "");
+    }
+
+    public static String removeSquareBrackets(String str) {
+        return str.replaceAll("\\[", "").replaceAll("\\]", "");
     }
 
     public static boolean containsExactWord(String text, String word) {
