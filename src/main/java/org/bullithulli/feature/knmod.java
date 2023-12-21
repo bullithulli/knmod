@@ -96,7 +96,7 @@ public class knmod {
             // example
             //init python:
             //      print("hello world")
-            if (untrimmedline.startsWith("while ") || untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || (untrimmedline.startsWith("init ") && untrimmedline.endsWith(":"))) {
+            if (untrimmedline.startsWith("while ") || untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || ((untrimmedline.startsWith("image ")||untrimmedline.startsWith("image:")) && untrimmedline.endsWith(":")) || ((untrimmedline.startsWith("init ")||untrimmedline.startsWith("init:")) && untrimmedline.endsWith(":"))) {
                 writeLineToDisk(untrimmedline, fw);
                 parentFunctionBlockWhiteSpaceSize = 0;
                 insideFunctionBlockThatShouldRun = true;
@@ -109,6 +109,15 @@ public class knmod {
                 writeLineToDisk(knmodSay(trimmedLine), fw);
                 continue;
             }
+
+            int checkIfForceSkipSectionEnd_childWhitespace=countLeadingWhitespaces(untrimmedline);
+            if(checkIfForceSkipSectionEnd_childWhitespace <= parentFunctionBlockWhiteSpaceSize && forceSkipSection){
+                parentFunctionBlockWhiteSpaceSize = 0;
+                insideFunctionBlockThatShouldRun = false;
+                forceSkipSection = false;
+            }
+
+
 
             // label car:
             // images car:
