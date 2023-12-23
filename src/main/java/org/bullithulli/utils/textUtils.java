@@ -16,6 +16,11 @@ public class textUtils {
         return count;
     }
 
+    public static int countIndentations(int whiteSpacesCount, boolean isTab, int NumberOfSpacesPerIndent) {
+        if (isTab) return whiteSpacesCount;
+        else return whiteSpacesCount / NumberOfSpacesPerIndent;
+    }
+
     public static String removeQuotesFromLine(String str) {
         return str.replaceAll("\"", "").replaceAll("'", "");
     }
@@ -41,5 +46,13 @@ public class textUtils {
             }
         }
         return false;
+    }
+
+    public static String getTabbedString(int n) {
+        StringBuilder tabString = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            tabString.append("\t");
+        }
+        return tabString.toString();
     }
 }
