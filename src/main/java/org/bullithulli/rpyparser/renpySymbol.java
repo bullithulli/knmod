@@ -1,5 +1,7 @@
 package org.bullithulli.rpyparser;
 
+import java.util.ArrayList;
+
 import static org.bullithulli.utils.textUtils.getTabbedString;
 
 public abstract class renpySymbol {
@@ -8,7 +10,7 @@ public abstract class renpySymbol {
     int NUMBER_OF_HIERARCHY = 0;
     RENPY_SYMBOL_TYPE renpySymbolType;
     renpySymbol HIERARCHY_PARENT_SYMBOL;
-    renpySymbol HIERARCHY_CHILD_SYMBOL;
+    ArrayList<renpySymbol> HIERARCHY_CHILD_SYMBOL=new ArrayList<>();
     renpySymbol CHAIN_PARENT_SYMBOL;
     renpySymbol CHAIN_CHILD_SYMBOL;
 
@@ -58,12 +60,12 @@ public abstract class renpySymbol {
         this.HIERARCHY_PARENT_SYMBOL = HIERARCHY_PARENT_SYMBOL;
     }
 
-    public renpySymbol getHIERARCHY_CHILD_SYMBOL() {
+    public ArrayList<renpySymbol> getHIERARCHY_CHILD_SYMBOL() {
         return HIERARCHY_CHILD_SYMBOL;
     }
 
-    public void setHIERARCHY_CHILD_SYMBOL(renpySymbol HIERARCHY_CHILD_SYMBOL) {
-        this.HIERARCHY_CHILD_SYMBOL = HIERARCHY_CHILD_SYMBOL;
+    public void addHIERARCHY_CHILD_SYMBOL(renpySymbol HIERARCHY_CHILD_SYMBOL) {
+        this.HIERARCHY_CHILD_SYMBOL.add(HIERARCHY_CHILD_SYMBOL);
     }
 
     public renpySymbol getCHAIN_PARENT_SYMBOL() {

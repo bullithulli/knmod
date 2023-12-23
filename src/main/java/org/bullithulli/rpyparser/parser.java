@@ -13,7 +13,7 @@ public class parser {
         int CURRENT_HIERARCHY = 0;
         renpySymbol previousHierarchyParent = root;
         renpySymbol previousChainParent = root;
-        final String regex_detect_for_labels = "^[a-z|A-Z]\\w*\\s+\\\".+";
+        final String regex_detect_for_labels = "^[a-z|A-Z]\\w*\\s+\".+";
         Pattern pattern_for_labels = Pattern.compile(regex_detect_for_labels);
 
         String[] linesArray = lines.split("\n");
@@ -28,23 +28,18 @@ public class parser {
                      * label z:
                      * label k: <--same hierarchy
                      */
-                    label.setNUMBER_OF_HIERARCHY(h);
-                    previousChainParent.setCHAIN_CHILD_SYMBOL(label);
-                    if (h == 0) {
-                        label.setHIERARCHY_PARENT_SYMBOL(root);
-                    } else {
-                        renpySymbol detectedParent = getParentHierarchySymbol(h, previousChainParent);
-                        label.setHIERARCHY_PARENT_SYMBOL(detectedParent);
-                    }
+                    renpySymbol detectedParent = getParentHierarchySymbol(h, previousChainParent);
+                    label.setHIERARCHY_PARENT_SYMBOL(detectedParent);
+                    detectedParent.addHIERARCHY_CHILD_SYMBOL(label);
+
                 } else if (h > CURRENT_HIERARCHY) {
                     /*
                      * label one:
                      *      label nine: <----this
                      */
                     h = CURRENT_HIERARCHY + 1;
-                    label.setNUMBER_OF_HIERARCHY(h);
-                    previousChainParent.setCHAIN_CHILD_SYMBOL(label);
                     label.setHIERARCHY_PARENT_SYMBOL(previousHierarchyParent);
+                    previousHierarchyParent.addHIERARCHY_CHILD_SYMBOL(label);
                 } else {
                     /*
                      * label one:
@@ -52,14 +47,14 @@ public class parser {
                      *          label three
                      *      label four: <---- here
                      */
-
-                    label.setNUMBER_OF_HIERARCHY(h);
-                    previousChainParent.setCHAIN_CHILD_SYMBOL(label);
                     renpySymbol detectedParent = getParentHierarchySymbol(h, previousChainParent);
                     label.setHIERARCHY_PARENT_SYMBOL(detectedParent);
+                    detectedParent.addHIERARCHY_CHILD_SYMBOL(label);
                 }
-
+                label.setNUMBER_OF_HIERARCHY(h);
+                previousChainParent.setCHAIN_CHILD_SYMBOL(label);
                 label.setCHAIN_PARENT_SYMBOL(previousChainParent);
+
                 previousHierarchyParent = label;
                 previousChainParent = label;
                 CURRENT_HIERARCHY = h;
