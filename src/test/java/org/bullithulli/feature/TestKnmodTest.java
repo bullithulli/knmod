@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static junit.framework.TestCase.assertEquals;
@@ -252,6 +253,32 @@ public class TestKnmodTest {
                 """;
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipSectionAndLabel.rpy")).getPath();
+        modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
+        String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
+        assertEquals(solution, content);
+    }
+
+    @Test
+    public void silenceKNMOD_forTest() throws Exception {
+        String solution = """
+                define KN_MOD = Character("KN_MOD", color="#ff0000")
+                # java -jar modder-2.jar null
+                # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
+                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                KN_MOD "label later02:"
+                scene b028 with dissolve
+                call phone_start from _call_phone_start
+                call message_start("SABRINA", "hey") from _call_message_start
+                call message("SABRINA", "Why didnt you text me when you got to the hotel?") from _call_message
+                call reply_message("Didnt know I was supposed to.") from _call_reply_message
+                call reply_message("Bye") from _call_reply_message
+                anwar "hello"
+                KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
+                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
+                """;
+        modder2 modder2 = new modder2();
+        modder2.knmod.silenceKNMOD_for.addAll(Arrays.asList("call phone_start,call message_start,call reply_message,call message".split(",")));
+        String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/ingoreKNtest.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
         String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
         assertEquals(solution, content);

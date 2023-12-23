@@ -14,6 +14,7 @@ public class knmod {
 
     public ArrayList<String> skipLinesStartsWith_FOR_KNMOD = new ArrayList<>();
     public ArrayList<String> skipLinesThatContainsWord_FOR_KNMOD = new ArrayList<>();
+    public ArrayList<String> silenceKNMOD_for = new ArrayList<>();
 
     public knmod() {
         skipLinesStartsWith_FOR_KNMOD.add("BULLITULLI-MODDER2:");
@@ -96,7 +97,7 @@ public class knmod {
             // example
             //init python:
             //      print("hello world")
-            if (untrimmedline.startsWith("while ") || untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || ((untrimmedline.startsWith("image ")||untrimmedline.startsWith("image:")) && untrimmedline.endsWith(":")) || ((untrimmedline.startsWith("init ")||untrimmedline.startsWith("init:")) && untrimmedline.endsWith(":"))) {
+            if (untrimmedline.startsWith("while ") || untrimmedline.startsWith("python:") || untrimmedline.startsWith("python :") || untrimmedline.startsWith("init python:") || untrimmedline.startsWith("screen ") || ((untrimmedline.startsWith("image ") || untrimmedline.startsWith("image:")) && untrimmedline.endsWith(":")) || ((untrimmedline.startsWith("init ") || untrimmedline.startsWith("init:")) && untrimmedline.endsWith(":"))) {
                 writeLineToDisk(untrimmedline, fw);
                 parentFunctionBlockWhiteSpaceSize = 0;
                 insideFunctionBlockThatShouldRun = true;
@@ -106,17 +107,16 @@ public class knmod {
 
 
             if (trimmedLine.startsWith("return") || trimmedLine.startsWith("jump ") || trimmedLine.startsWith("call ") || trimmedLine.contains("renpy.quit")) {
-                writeLineToDisk(knmodSay(trimmedLine), fw);
+                writeLineToDisk(knmodSay(trimmedLine, silenceKNMOD_for), fw);
                 continue;
             }
 
-            int checkIfForceSkipSectionEnd_childWhitespace=countLeadingWhitespaces(untrimmedline);
-            if(checkIfForceSkipSectionEnd_childWhitespace <= parentFunctionBlockWhiteSpaceSize && forceSkipSection){
+            int checkIfForceSkipSectionEnd_childWhitespace = countLeadingWhitespaces(untrimmedline);
+            if (checkIfForceSkipSectionEnd_childWhitespace <= parentFunctionBlockWhiteSpaceSize && forceSkipSection) {
                 parentFunctionBlockWhiteSpaceSize = 0;
                 insideFunctionBlockThatShouldRun = false;
                 forceSkipSection = false;
             }
-
 
 
             // label car:
@@ -127,7 +127,7 @@ public class knmod {
                 if ((trimmedLine.startsWith("if ") || trimmedLine.startsWith("if:")) || (trimmedLine.startsWith("else ") || trimmedLine.startsWith("else:")) || (trimmedLine.startsWith("elif ") || trimmedLine.startsWith("elif:")) || trimmedLine.startsWith("label ") || (trimmedLine.startsWith("menu ") || trimmedLine.startsWith("menu(") || trimmedLine.startsWith("menu:")) || trimmedLine.startsWith("\"")) {
                     parentFunctionBlockWhiteSpaceSize = 0;
                     insideFunctionBlockThatShouldRun = false;
-                    writeLineToDisk(knmodSay(trimmedLine), fw);
+                    writeLineToDisk(knmodSay(trimmedLine, silenceKNMOD_for), fw);
                     continue;
                 }
                 //Echoble
@@ -173,8 +173,8 @@ public class knmod {
             }
         }
         //A file is processed here, add some signatures
-        writeLineToDisk(knmodSay("ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"), fw);
-        writeLineToDisk(knmodSay("modded by modder2 " + version + " program. Created by BulliThulli"), fw);
+        writeLineToDisk(knmodSay("ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/", silenceKNMOD_for), fw);
+        writeLineToDisk(knmodSay("modded by modder2 " + version + " program. Created by BulliThulli", silenceKNMOD_for), fw);
         fw.close();
     }
 }

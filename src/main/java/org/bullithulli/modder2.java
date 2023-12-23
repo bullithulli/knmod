@@ -18,6 +18,7 @@ public class modder2 {
     public static final String eol = "\n";
     public static final String indent = "    ";
     public static String realArgs;
+    public knmod knmod;
     boolean isKnMODFeatureRequested = false;
     boolean isLabelLookUpFeatureRequested = false;
     boolean removeFromSourceOnLabelHit = false;
@@ -30,7 +31,6 @@ public class modder2 {
     String outputFileForRequestedFeature = null;
     String lookupKey = null;
     ArrayList<String> ListOfIgnoreLabels = new ArrayList<>();
-    knmod knmod;
     labelLookup lookupLabel;
     boolean followScreenCalls = false;
 
@@ -60,10 +60,11 @@ public class modder2 {
         System.out.println("  --file=FILENAME           Specify a file");
         System.out.println("  --outfile=FILENAME        Destination output. Defaults to /tmp/out");
         System.out.println("  --feature=FEATURE_NAME    The Feature you want to use. Available, KNMOD,LABEL_LOOKUP");
-        System.out.println("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --skipLinesUpto, --ignoreLines --ignoreLinesContaining");
+        System.out.println("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --skipLinesUpto, --ignoreLines --ignoreLinesContaining --silenceKNMOD_for");
         System.out.println("                                            --skipLinesUpto=INT                     Don't process these lines in the requested feature. Defaults to 0");
         System.out.println("                                            --ignoreLines=startsWith1,startW2       Skips the line that starts with <list>. Default: BULLITULLI-MODDER2");
         System.out.println("                                            --ignoreLinesContaining=word1,word2     Skips the line that contains the words <list>. Default: []");
+        System.out.println("                                            --silenceKNMOD_for=startWord1,..        If you dont want to knmod if lines, pass here. Default: []");
         System.out.println("                            LABEL_LOOKUP:   mandatory fields: --file --key; Optional fields: --removefromsource --stopOnNewlabel --stopOnNextLabelJump --followInnerJumps --followInnerCalls --ignoreLabels --followScreenCalls");
         System.out.println("                                            --key=STRING                        Label to Lookup");
         System.out.println("                                            --removefromsource=BOOLEAN          Erase label definition in source file if matches. Defaults to false");
@@ -164,6 +165,8 @@ public class modder2 {
                 ListOfIgnoreLabels.addAll(Arrays.asList(arg.substring("--ignoreLabels=".length()).split(",")));
             } else if (arg.startsWith("--ignoreLines=")) {
                 knmod.skipLinesStartsWith_FOR_KNMOD.addAll(Arrays.asList(arg.substring("--ignoreLines=".length()).split(",")));
+            } else if (arg.startsWith("--silenceKNMOD_for=")) {
+                knmod.silenceKNMOD_for.addAll(Arrays.asList(arg.substring("--silenceKNMOD_for=".length()).split(",")));
             } else if (arg.startsWith("--ignoreLinesContaining=")) {
                 knmod.skipLinesThatContainsWord_FOR_KNMOD.addAll(Arrays.asList(arg.substring("--ignoreLinesContaining=".length()).split(",")));
             } else if (arg.startsWith("--followScreenCalls=")) {
