@@ -1,5 +1,7 @@
 package org.bullithulli.rpyparser;
 
+import org.bullithulli.rpyparser.exception.renpyUnkownSymbolException;
+
 import java.util.regex.Pattern;
 
 import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.RENPY_LABEL;
@@ -47,11 +49,11 @@ public class parser {
                      *          label three
                      *      label four: <---- here
                      */
-                    renpySymbol detectedParent = getParentHierarchySymbol(h, previousChainParent);
+                    renpySymbol detectedParent = getParentHierarchySymbol(h, previousChainParent); //<--label one
                     label.setHIERARCHY_PARENT_SYMBOL(detectedParent);
                     detectedParent.addHIERARCHY_CHILD_SYMBOL(label);
                 }
-                label.setNUMBER_OF_HIERARCHY(h);
+                label.setHIERARCHY_LEVEL(h);
                 previousChainParent.setCHAIN_CHILD_SYMBOL(label);
                 label.setCHAIN_PARENT_SYMBOL(previousChainParent);
 
@@ -70,7 +72,7 @@ public class parser {
     public renpySymbol getParentHierarchySymbol(int current_hierarchy, renpySymbol assumedParent) {
         renpySymbol tempParent = assumedParent;
         while (true) {
-            if (tempParent.getNUMBER_OF_HIERARCHY() < current_hierarchy) {
+            if (tempParent.getHIERARCHY_LEVEL() < current_hierarchy) {
                 return tempParent;
             } else {
                 tempParent = tempParent.getHIERARCHY_PARENT_SYMBOL();
@@ -100,5 +102,8 @@ public class parser {
  *      Anwar "Russian Trnslate"
  *
  *  replace by english
+ *
+ *
+ * Add subtract labels
  *
  */

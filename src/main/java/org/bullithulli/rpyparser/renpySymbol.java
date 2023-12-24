@@ -7,10 +7,10 @@ import static org.bullithulli.utils.textUtils.getTabbedString;
 public abstract class renpySymbol {
     public String RENPY_UNTRIMMED_LINE;
     public String RENPY_TRIMMED_LINE;
-    int NUMBER_OF_HIERARCHY = 0;
+    int HIERARCHY_LEVEL = 0;
     RENPY_SYMBOL_TYPE renpySymbolType;
     renpySymbol HIERARCHY_PARENT_SYMBOL;
-    ArrayList<renpySymbol> HIERARCHY_CHILD_SYMBOL=new ArrayList<>();
+    ArrayList<renpySymbol> HIERARCHY_CHILD_SYMBOL = new ArrayList<>();
     renpySymbol CHAIN_PARENT_SYMBOL;
     renpySymbol CHAIN_CHILD_SYMBOL;
 
@@ -36,12 +36,12 @@ public abstract class renpySymbol {
         this.RENPY_TRIMMED_LINE = RENPY_TRIMMED_LINE;
     }
 
-    public int getNUMBER_OF_HIERARCHY() {
-        return NUMBER_OF_HIERARCHY;
+    public int getHIERARCHY_LEVEL() {
+        return HIERARCHY_LEVEL;
     }
 
-    public void setNUMBER_OF_HIERARCHY(int NUMBER_OF_HIERARCHY) {
-        this.NUMBER_OF_HIERARCHY = NUMBER_OF_HIERARCHY;
+    public void setHIERARCHY_LEVEL(int HIERARCHY_LEVEL) {
+        this.HIERARCHY_LEVEL = HIERARCHY_LEVEL;
     }
 
     public RENPY_SYMBOL_TYPE getRenpySymbolType() {
@@ -84,10 +84,33 @@ public abstract class renpySymbol {
         this.CHAIN_CHILD_SYMBOL = CHAIN_CHILD_SYMBOL;
     }
 
-    public String getChainString() {
-        String out = getTabbedString(NUMBER_OF_HIERARCHY).concat(getRENPY_TRIMMED_LINE()).concat("\n");
+    public String getChainString(int subtractIndents, int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy) {
+        String out = "";
+        if (includeSameHierarchy) {
+            if (getHIERARCHY_LEVEL() >= thresholdingLevel) {
+                out = getTabbedString(HIERARCHY_LEVEL - subtractIndents).concat(getRENPY_TRIMMED_LINE()).concat("\n");
+            }
+        } else {
+            if (getHIERARCHY_LEVEL() > thresholdingLevel) {
+                out = getTabbedString(HIERARCHY_LEVEL - subtractIndents).concat(getRENPY_TRIMMED_LINE()).concat("\n");
+            }
+        }
+
         if (getCHAIN_CHILD_SYMBOL() != null) {
-            out += getCHAIN_CHILD_SYMBOL().getChainString();
+            if (followLowerHierarchy) {
+                out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, followLowerHierarchy, includeSameHierarchy);
+            } else {
+                /*
+                if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
+                 */
+                if (includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() < thresholdingLevel) {
+                    return out;
+                } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
+                    return out;
+                } else {
+                    out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, followLowerHierarchy, includeSameHierarchy);
+                }
+            }
         }
         return out;
     }

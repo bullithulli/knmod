@@ -1,4 +1,4 @@
-package org.bullithulli.rpyparser;
+package org.bullithulli.rpyparser.exception;
 
 public class renpyUnkownSymbolException extends Exception {
     public renpyUnkownSymbolException(String line) {

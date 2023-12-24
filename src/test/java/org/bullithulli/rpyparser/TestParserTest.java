@@ -1,5 +1,6 @@
 package org.bullithulli.rpyparser;
 
+import org.bullithulli.rpyparser.exception.renpyUnkownSymbolException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +16,7 @@ public class TestParserTest {
                 "label six:\n" +
                 "\tlabel seven:";
         parser renpyParser = new parser();
-        assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString().trim(), rpyCode);
+        assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1,true, true).trim(), rpyCode);
     }
 
     @Test
@@ -28,7 +29,7 @@ public class TestParserTest {
                 \tlabel bike:
                 \tlabel z:""";
         parser renpyParser = new parser();
-        assertEquals(sol, renpyParser.parseLine(rpyCode, true, 2).getChainString().trim());
+        assertEquals(sol, renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1,true, true).trim());
     }
 
     @Test(expected = renpyUnkownSymbolException.class)
@@ -39,6 +40,7 @@ public class TestParserTest {
         parser renpyParser = new parser();
         renpyParser.parseLine(rpyCode, true, 2);
     }
+
     @Test
     public void parseTest4() throws renpyUnkownSymbolException {
         String rpyCode = "label one:\n" +
