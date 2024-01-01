@@ -16,7 +16,7 @@ public class TestParserTest {
                 "label six:\n" +
                 "\tlabel seven:";
         parser renpyParser = new parser();
-        assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1,true, true).trim(), rpyCode);
+        assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1, true, true).trim(), rpyCode);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class TestParserTest {
                 \tlabel bike:
                 \tlabel z:""";
         parser renpyParser = new parser();
-        assertEquals(sol, renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1,true, true).trim());
+        assertEquals(sol, renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1, true, true).trim());
     }
 
     @Test(expected = renpyUnkownSymbolException.class)

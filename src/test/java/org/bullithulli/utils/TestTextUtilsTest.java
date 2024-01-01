@@ -17,12 +17,12 @@ public class TestTextUtilsTest {
     }
 
     @Test
-    public void countIndentationsTest(){
-        assertEquals(countIndentations(0,true,0),0);
-        assertEquals(countIndentations(2,true,0),2);
-        assertEquals(countIndentations(2,true,312),2);
-        assertEquals(countIndentations(4,false,4),1);
-        assertEquals(countIndentations(4,false,2),2);
-        assertEquals(countIndentations(8,false,4),2);
+    public void countIndentationsTest() {
+        assertEquals(countIndentations(0, true, 0), 0);
+        assertEquals(countIndentations(2, true, 0), 2);
+        assertEquals(countIndentations(2, true, 312), 2);
+        assertEquals(countIndentations(4, false, 4), 1);
+        assertEquals(countIndentations(4, false, 2), 2);
+        assertEquals(countIndentations(8, false, 4), 2);
     }
 }

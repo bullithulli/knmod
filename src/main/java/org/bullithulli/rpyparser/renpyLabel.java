@@ -7,7 +7,7 @@ public class renpyLabel extends renpySymbol {
 
     public renpyLabel(RENPY_SYMBOL_TYPE renpySymbolType, String line) {
         super(renpySymbolType, line);
-        labelName = RENPY_TRIMMED_LINE.split("\\s+")[1].replaceAll(":","").trim();
+        labelName = RENPY_TRIMMED_LINE.split("\\s+")[1].replaceAll(":", "").trim();
     }
 
     public ArrayList<renpyLabel> getInnerLabels() {
@@ -22,7 +22,7 @@ public class renpyLabel extends renpySymbol {
 
     public renpyLabel getInnerLabelByName(String key) {
         for (renpyLabel renpyLabel : getInnerLabels()) {
-            if (renpyLabel.labelName.equalsIgnoreCase(key)) {
+            if (renpyLabel.getLabelName().equalsIgnoreCase(key)) {
                 return renpyLabel;
             }
         }

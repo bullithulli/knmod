@@ -32,16 +32,16 @@ public class TestrootSymbolTest {
         rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
         ArrayList<renpyLabel> labels = root.getInnerLabels();
         assertEquals(labels.size(), 2);
-        assertEquals("one", labels.get(0).labelName);
-        assertEquals("six", root.getInnerLabelByName("six").labelName);
+        assertEquals("one", labels.get(0).getLabelName());
+        assertEquals("six", root.getInnerLabelByName("six").getLabelName());
         assertNull(root.getInnerLabelByName("ten"));
 
         renpyLabel one = root.getInnerLabelByName("one");
         labels = one.getInnerLabels();
         assertEquals(labels.size(), 3);
-        assertEquals("two", labels.get(0).labelName);
-        assertEquals("four", labels.get(1).labelName);
-        assertEquals("five", labels.get(2).labelName);
+        assertEquals("two", labels.get(0).getLabelName());
+        assertEquals("four", labels.get(1).getLabelName());
+        assertEquals("five", labels.get(2).getLabelName());
         assertNull(one.getInnerLabelByName("ten"));
 
         String temp =

@@ -98,7 +98,7 @@ public abstract class renpySymbol {
 
         if (getCHAIN_CHILD_SYMBOL() != null) {
             if (followLowerHierarchy) {
-                out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, followLowerHierarchy, includeSameHierarchy);
+                out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, true, includeSameHierarchy);
             } else {
                 /*
                 if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
@@ -108,7 +108,7 @@ public abstract class renpySymbol {
                 } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
                     return out;
                 } else {
-                    out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, followLowerHierarchy, includeSameHierarchy);
+                    out += getCHAIN_CHILD_SYMBOL().getChainString(subtractIndents, thresholdingLevel, false, includeSameHierarchy);
                 }
             }
         }
@@ -117,5 +117,36 @@ public abstract class renpySymbol {
 
     public String toString() {
         return getRENPY_UNTRIMMED_LINE();
+    }
+
+    public ArrayList<renpySymbol> getChainSymbols(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy) {
+        ArrayList<renpySymbol> list = new ArrayList<>();
+        if (includeSameHierarchy) {
+            if (getHIERARCHY_LEVEL() >= thresholdingLevel) {
+                list.add(this);
+            }
+        } else {
+            if (getHIERARCHY_LEVEL() > thresholdingLevel) {
+                list.add(this);
+            }
+        }
+
+        if (getCHAIN_CHILD_SYMBOL() != null) {
+            if (followLowerHierarchy) {
+                list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, true, includeSameHierarchy));
+            } else {
+                /*
+                if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
+                 */
+                if (includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() < thresholdingLevel) {
+                    return list;
+                } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
+                    return list;
+                } else {
+                    list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, false, includeSameHierarchy));
+                }
+            }
+        }
+        return list;
     }
 }

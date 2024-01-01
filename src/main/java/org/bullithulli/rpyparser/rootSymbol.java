@@ -22,7 +22,7 @@ public class rootSymbol extends renpySymbol {
 
     public renpyLabel getInnerLabelByName(String key) {
         for (renpyLabel renpyLabel : getInnerLabels()) {
-            if (renpyLabel.labelName.equalsIgnoreCase(key)) {
+            if (renpyLabel.getLabelName().equalsIgnoreCase(key)) {
                 return renpyLabel;
             }
         }

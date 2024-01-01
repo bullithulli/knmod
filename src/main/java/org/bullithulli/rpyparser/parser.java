@@ -4,8 +4,7 @@ import org.bullithulli.rpyparser.exception.renpyUnkownSymbolException;
 
 import java.util.regex.Pattern;
 
-import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.RENPY_LABEL;
-import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.ROOT_FILE;
+import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.*;
 import static org.bullithulli.utils.textUtils.countIndentations;
 import static org.bullithulli.utils.textUtils.countLeadingWhitespaces;
 
@@ -61,7 +60,7 @@ public class parser {
                 previousChainParent = label;
                 CURRENT_HIERARCHY = h;
             } else if (pattern_for_labels.matcher(trimmedLine).find()) {
-
+                // TODO: 12/24/23 speakTextParsingHelper(untrimmedLine,basedOnTabCounts,spaceSize);
             } else {
                 throw new renpyUnkownSymbolException(trimmedLine);
             }
@@ -69,6 +68,18 @@ public class parser {
         return root;
     }
 
+    private void speakTextParsingHelper(String untrimmedLine, boolean basedOnTabCounts, int spaceSize, int CURRENT_HIERARCHY) {
+        renpySpeakerText speakerText = new renpySpeakerText(RENPY_SPEAKER_TEXT, untrimmedLine);
+        int h = countIndentations(countLeadingWhitespaces(untrimmedLine), basedOnTabCounts, spaceSize);
+        if (h == CURRENT_HIERARCHY) {
+            /*
+             * label z:
+             * Anwar "h" <--same hierarchy
+             */
+        }
+    }
+
+    // TODO: 12/24/23 complete this function 
     public renpySymbol getParentHierarchySymbol(int current_hierarchy, renpySymbol assumedParent) {
         renpySymbol tempParent = assumedParent;
         while (true) {

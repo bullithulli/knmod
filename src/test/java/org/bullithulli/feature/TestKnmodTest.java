@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.bullithulli.utils.TestSysUtils.disableSysOuts;
-import static org.bullithulli.utils.TestSysUtils.enableSysOuts;
 
 public class TestKnmodTest {
     @Test
