@@ -1,15 +1,16 @@
 package org.bullithulli.rpyparser.symImpl.blockSymbol;
 
+import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
 import org.bullithulli.rpyparser.parser;
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
+import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.renpyCall;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class TestRenpyLabelTest {
     @Test
@@ -24,10 +25,12 @@ public class TestRenpyLabelTest {
                 \tlabel seven:""";
         parser renpyParser = new parser();
         rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
-        ArrayList<renpySymbol> symbols = root.getChainSymbols(root.getHIERARCHY_LEVEL(), true, true);
+        ArrayList<renpySymbol> symbols = root.getChainSymbols(root.getHIERARCHY_LEVEL(), true, true, false);
+
         assertEquals(symbols.size(), 8);
         renpySymbol one = symbols.get(1);
-        assertEquals(4, one.getChainSymbols(one.getHIERARCHY_LEVEL(), false, false).size());
+        assertEquals(4, one.getChainSymbols(one.getHIERARCHY_LEVEL(), false, false, false).size());
+
     }
 
     @Test
@@ -106,5 +109,50 @@ public class TestRenpyLabelTest {
         assertEquals("label five:", root.getInnerLabelByNameSearchRecursivly("five").getRENPY_TRIMMED_LINE());
         assertEquals("label ten:", root.getInnerLabelByNameSearchRecursivly("ten").getRENPY_TRIMMED_LINE());
         assertNull(root.getInnerLabelByNameSearchRecursivly("texxxn"));
+    }
+
+    @Test
+    public void test6() {
+        renpyLabel label = new renpyLabel(RENPY_SYMBOL_TYPE.RENPY_LABEL, "label x:");
+        assertTrue(label.isBlockSymbol());
+        renpyCall call = new renpyCall(RENPY_SYMBOL_TYPE.RENPY_CALL, "call someFunction");
+        assertFalse(call.isBlockSymbol());
+    }
+
+    @Test
+    public void test7() {
+        String rpyCode = """
+                label one:
+                	label two:
+                		label three:
+                		jump five
+                	label four:
+                		label x1:
+                			return
+                		return
+                	label five:
+                	return
+                label six:
+                	label seven:""";
+        parser renpyParser = new parser();
+        rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
+        ArrayList<renpySymbol> symbols = root.getChainSymbols(root.getHIERARCHY_LEVEL(), true, true, false);
+        assertEquals(symbols.size(), 13);
+
+        renpySymbol four = root.getInnerLabelByNameSearchRecursivly("four");
+        assertEquals(3, four.getChainSymbols(four.getHIERARCHY_LEVEL(), false, false, true).size());
+        assertEquals(3 + 1, four.getChainSymbols(four.getHIERARCHY_LEVEL(), false, true, true).size());
+
+        renpySymbol x1 = root.getInnerLabelByNameSearchRecursivly("x1");
+        assertEquals(1, x1.getChainSymbols(x1.getHIERARCHY_LEVEL(), false, false, true).size());
+        assertEquals(1 + 1, x1.getChainSymbols(x1.getHIERARCHY_LEVEL(), false, true, true).size());
+
+        renpySymbol five = root.getInnerLabelByNameSearchRecursivly("five");
+        assertEquals(0, five.getChainSymbols(five.getHIERARCHY_LEVEL(), false, false, true).size());
+        assertEquals(2, five.getChainSymbols(five.getHIERARCHY_LEVEL(), false, true, true).size());
+
+        renpySymbol one = root.getInnerLabelByNameSearchRecursivly("one");
+        assertEquals(9, one.getChainSymbols(one.getHIERARCHY_LEVEL(), false, false, true).size());
+        assertEquals(9 + 1, one.getChainSymbols(one.getHIERARCHY_LEVEL(), false, true, true).size());
     }
 }

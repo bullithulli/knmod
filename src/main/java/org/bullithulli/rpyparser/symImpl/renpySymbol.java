@@ -137,8 +137,20 @@ public abstract class renpySymbol {
         return getRENPY_UNTRIMMED_LINE();
     }
 
-    public ArrayList<renpySymbol> getChainSymbols(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy) {
+    public ArrayList<renpySymbol> getChainSymbols(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy, boolean stopOnJumpOrReturn) {
         ArrayList<renpySymbol> list = new ArrayList<>();
+        //End Check
+        RENPY_SYMBOL_TYPE TYPE = getRenpySymbolType();
+        if (stopOnJumpOrReturn) {// && (getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1) && includeSameHierarchy) {
+            if (TYPE == RENPY_RETURN || TYPE == RENPY_JUMP) { //not applicable for followLowerHierarchy
+                if ((getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1)) {
+                    list.add(this);
+                    return list;
+                }
+            }
+        }
+
+        //add self?
         if (includeSameHierarchy) {
             if (getHIERARCHY_LEVEL() >= thresholdingLevel) {
                 list.add(this);
@@ -149,9 +161,10 @@ public abstract class renpySymbol {
             }
         }
 
+        //Do recursion
         if (getCHAIN_CHILD_SYMBOL() != null) {
             if (followLowerHierarchy) {
-                list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, true, includeSameHierarchy));
+                list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, true, includeSameHierarchy, stopOnJumpOrReturn));
             } else {
                 /*
                 if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
@@ -161,7 +174,7 @@ public abstract class renpySymbol {
                 } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
                     return list;
                 } else {
-                    list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, false, includeSameHierarchy));
+                    list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, false, includeSameHierarchy, stopOnJumpOrReturn));
                 }
             }
         }
@@ -169,7 +182,7 @@ public abstract class renpySymbol {
     }
 
     /**
-     * when followLowerHirracy is neabled, no point of setting includeSameHierarchy to false
+     * when followLowerHierarchy is enabled, no point of setting includeSameHierarchy to false
      *
      * @param thresholdingLevel
      * @param followLowerHierarchy
