@@ -1,4 +1,7 @@
-package org.bullithulli.rpyparser;
+package org.bullithulli.rpyparser.symImpl;
+
+import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
+import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 
 import java.util.ArrayList;
 

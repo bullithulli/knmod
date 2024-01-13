@@ -9,15 +9,16 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.bullithulli.modder2.version;
 
 public class TestKnmodTest {
     @Test
     public void test1() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 python:
                         kstm = renpy.input("What's your relationship with her? (If you leave it blank, she'll be your stepmom.)")
                         kstm = kstm.strip()
@@ -28,8 +29,8 @@ public class TestKnmodTest {
                 hello
                 World
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -39,11 +40,11 @@ public class TestKnmodTest {
 
     @Test
     public void test2() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 python:
                         kstm = renpy.input("What's your relationship with her? (If you leave it blank, she'll be your stepmom.)")
                 kstm = kstm.strip()
@@ -54,8 +55,8 @@ public class TestKnmodTest {
                 hello
                 World
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 2);
@@ -65,11 +66,11 @@ public class TestKnmodTest {
 
     @Test
     public void test3() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "label E4_Start: #Figure out which branch were on"
                 KN_MOD "if mc_cancel_apurna_date == 1 or apurna_love == 0 or apurna_love == 2: #on Aprils branch"
                 $E3Branch = "April"
@@ -78,8 +79,8 @@ public class TestKnmodTest {
                 $E3Branch = "Apurna"
                 KN_MOD "jump E4_Apurna"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/f.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -89,18 +90,18 @@ public class TestKnmodTest {
 
     @Test
     public void test4() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 hello #somecomment
                 KN_MOD "else if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 world
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/g.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -110,11 +111,11 @@ public class TestKnmodTest {
 
     @Test
     public void test6() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "label z:"
                 KN_MOD "menu:"
                 KN_MOD "What about the fraternities?:"
@@ -123,8 +124,8 @@ public class TestKnmodTest {
                 KN_MOD "else: ### ERROR: else"
                 u "Do you think they're reviewing the Apes?"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/b.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -134,19 +135,19 @@ public class TestKnmodTest {
 
     @Test
     public void test7() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "label z:"
                 KN_MOD "menu dsa:"
                 KN_MOD "Give me that:"
                 KN_MOD "menufail_label=ep2s83_quiet: #TIMED CHOICE if time expires, jump to Say nothing"
                 KN_MOD "Give me that:"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/c.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -156,18 +157,19 @@ public class TestKnmodTest {
 
     //@Test
     public void test5() throws Exception {
-        String solution = """
+        // TODO: 1/12/24 no idea why i commented the test.
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 hello #somecomment
                 KN_MOD "else if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 world
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/a.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -177,16 +179,16 @@ public class TestKnmodTest {
 
     @Test
     public void test8() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "return"
                 KN_MOD "return#dsaasd"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/returntest.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -196,11 +198,11 @@ public class TestKnmodTest {
 
     @Test
     public void test9() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 image demons_far:
                     function anim_reset
                     time 0.01
@@ -215,8 +217,8 @@ public class TestKnmodTest {
                         pause 5.0
                         linear 5.0 alpha 1.0
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipImageTest.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -226,11 +228,11 @@ public class TestKnmodTest {
 
     @Test
     public void test10() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 image banish_channel:
                     parallel:
                         "images/scenes/003_summoning_wood/fx/scn_003_fx_beam[banish_frame_pad].webp"
@@ -247,8 +249,8 @@ public class TestKnmodTest {
                 with Pause(1.0)
                 anwar "hehllo"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipSectionAndLabel.rpy")).getPath();
         modder2.verifyAndExecuteKNModFeature(absolutePath, null, 0);
@@ -258,11 +260,11 @@ public class TestKnmodTest {
 
     @Test
     public void silenceKNMOD_forTest() throws Exception {
-        String solution = """
+        String solution = String.format("""
                 define KN_MOD = Character("KN_MOD", color="#ff0000")
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
-                # modded by modder2vNov2-2023 program. Created by BulliThulli
+                # modded by modder2%s program. Created by BulliThulli
                 KN_MOD "label later02:"
                 scene b028 with dissolve
                 call phone_start from _call_phone_start
@@ -272,8 +274,8 @@ public class TestKnmodTest {
                 call reply_message("Bye") from _call_reply_message
                 anwar "hello"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
-                KN_MOD "modded by modder2 vNov2-2023 program. Created by BulliThulli"
-                """;
+                KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                """, version, version);
         modder2 modder2 = new modder2();
         modder2.knmod.silenceKNMOD_for.addAll(Arrays.asList("call phone_start,call message_start,call reply_message,call message".split(",")));
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/ingoreKNtest.rpy")).getPath();

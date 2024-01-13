@@ -49,10 +49,6 @@ public class textUtils {
     }
 
     public static String getTabbedString(int n) {
-        StringBuilder tabString = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            tabString.append("\t");
-        }
-        return tabString.toString();
+        return "\t".repeat(Math.max(0, n));
     }
 }

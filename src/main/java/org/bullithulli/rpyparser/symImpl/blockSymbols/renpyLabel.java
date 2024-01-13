@@ -1,8 +1,11 @@
-package org.bullithulli.rpyparser;
+package org.bullithulli.rpyparser.symImpl.blockSymbols;
+
+import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
+import org.bullithulli.rpyparser.symImpl.renpySymbol;
 
 import java.util.ArrayList;
 
-public class renpyLabel extends renpySymbol {
+public class renpyLabel extends renpyGenericBlockSymbol {
     String labelName;
 
     public renpyLabel(RENPY_SYMBOL_TYPE renpySymbolType, String line) {
@@ -12,7 +15,7 @@ public class renpyLabel extends renpySymbol {
 
     public ArrayList<renpyLabel> getInnerLabels() {
         ArrayList<renpyLabel> renpyLabels = new ArrayList<>();
-        for (renpySymbol symbol : HIERARCHY_CHILD_SYMBOL) {
+        for (renpySymbol symbol : getHIERARCHY_CHILD_SYMBOL()) {
             if (symbol.getRenpySymbolType() == RENPY_SYMBOL_TYPE.RENPY_LABEL) {
                 renpyLabels.add((renpyLabel) symbol);
             }

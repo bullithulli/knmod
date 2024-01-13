@@ -1,6 +1,7 @@
 package org.bullithulli.rpyparser;
 
-import org.bullithulli.rpyparser.exception.renpyUnkownSymbolException;
+import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
+import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,14 +13,14 @@ public class TestrootSymbolTest {
     @Test
     public void test1() {
         rootSymbol rootSymbol = new rootSymbol(RENPY_SYMBOL_TYPE.ROOT_FILE, "\n");
-        assertEquals(rootSymbol.HIERARCHY_LEVEL, -1);
+        assertEquals(rootSymbol.getHIERARCHY_LEVEL(), -1);
         assertNull(rootSymbol.getCHAIN_PARENT_SYMBOL());
         assertNull(rootSymbol.getHIERARCHY_PARENT_SYMBOL());
         assertEquals(rootSymbol.toString(), "\n");
     }
 
     @Test
-    public void rootParseTest2() throws renpyUnkownSymbolException {
+    public void rootParseTest2() {
         String rpyCode = "label one:\n" +
                 "\tlabel two:\n" +
                 "\t\tlabel three:\n" +

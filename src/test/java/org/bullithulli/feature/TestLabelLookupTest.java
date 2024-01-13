@@ -358,7 +358,6 @@ public class TestLabelLookupTest {
         assertEquals(solution, getStringFromSysOuts());
     }
 
-    // TODO: 11/3/23
     @Test
     public void screenCallTest1() throws IOException {
         String solution = """
