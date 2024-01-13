@@ -2,10 +2,7 @@ package org.bullithulli.rpyparser;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
@@ -152,8 +149,8 @@ public class TestParserTest {
 
     @Test
     public void parseTest6() {
-        String content =readFileContents("parserTests/test1.rpy");
-        String sol= """
+        String content = readFileContents("parserTests/test1.rpy");
+        String sol = """
                 screen StatsUI:
                 	add "tabletmenu/statsbg.png"
                 	frame:

@@ -5,6 +5,6 @@ import org.bullithulli.rpyparser.symImpl.renpySymbol;
 
 public class renpyGenericBlockSymbol extends renpySymbol {
     public renpyGenericBlockSymbol(RENPY_SYMBOL_TYPE renpySymbolType, String line) {
-        super(renpySymbolType, line);
+        super(renpySymbolType, line, true);
     }
 }

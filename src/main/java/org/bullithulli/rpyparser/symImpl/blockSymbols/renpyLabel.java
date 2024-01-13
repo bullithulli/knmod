@@ -20,13 +20,28 @@ public class renpyLabel extends renpyGenericBlockSymbol {
                 renpyLabels.add((renpyLabel) symbol);
             }
         }
+        renpyLabels.remove(this);
         return renpyLabels;
     }
 
-    public renpyLabel getInnerLabelByName(String key) {
+    public renpyLabel getInnerLabelByName(String target_label_name) {
         for (renpyLabel renpyLabel : getInnerLabels()) {
-            if (renpyLabel.getLabelName().equalsIgnoreCase(key)) {
+            if (renpyLabel.getLabelName().equalsIgnoreCase(target_label_name)) {
                 return renpyLabel;
+            }
+        }
+        return null;
+    }
+
+    public renpyLabel getInnerLabelByNameSearchRecursivly(String target_label_name) {
+        for (renpyLabel renpyLabel : getInnerLabels()) {
+            if (renpyLabel.getLabelName().equalsIgnoreCase(target_label_name)) {
+                return renpyLabel;
+            } else {
+                renpyLabel innerLabel = renpyLabel.getInnerLabelByNameSearchRecursivly(target_label_name);
+                if (innerLabel != null) {
+                    return innerLabel;  // Return the result of the recursive call if found
+                }
             }
         }
         return null;

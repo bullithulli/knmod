@@ -2,9 +2,7 @@ package org.bullithulli.rpyparser;
 
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyGenericBlockSymbol;
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
-import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.renpyGenericNonBlockSymbol;
-import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.renpyNoSpeakerText;
-import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.renpySpeakerText;
+import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 
@@ -31,7 +29,7 @@ public class parser {
         String[] linesArray = lines.split("\n");
         for (String untrimmedLine : linesArray) {
             String trimmedLine = untrimmedLine.trim();
-            if(trimmedLine.isEmpty()){
+            if (trimmedLine.isEmpty()) {
                 continue;//skip new lines, empty lines
             }
             String symbol = trimmedLine.split("\\s+")[0];
@@ -46,6 +44,12 @@ public class parser {
                     nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_SPEAKER_TEXT);
                 } else if (pattern_for_no_speaker_texts.matcher(trimmedLine).find()) {
                     nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_NO_SPEAKER_TEXT);
+                } else if (trimmedLine.startsWith("return")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_RETURN);
+                } else if (trimmedLine.startsWith("jump ")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_JUMP);
+                } else if (trimmedLine.startsWith("call ")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_CALL);
                 } else {
                     nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_GENERIC_NON_BLOCK_SYMBOLS);
                 }
@@ -111,6 +115,12 @@ public class parser {
             theSymbol = new renpySpeakerText(symbolType, untrimmedLine);
         } else if (symbolType == RENPY_NO_SPEAKER_TEXT) {
             theSymbol = new renpyNoSpeakerText(symbolType, untrimmedLine);
+        } else if (symbolType == RENPY_CALL) {
+            theSymbol = new renpyCall(symbolType, untrimmedLine);
+        } else if (symbolType == RENPY_JUMP) {
+            theSymbol = new renpyJump(symbolType, untrimmedLine);
+        } else if (symbolType == RENPY_RETURN) {
+            theSymbol = new renpyReturn(symbolType, untrimmedLine);
         } else {
             theSymbol = new renpyGenericNonBlockSymbol(symbolType, untrimmedLine);
         }

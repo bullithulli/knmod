@@ -2,7 +2,6 @@ package org.bullithulli.rpyparser.symImpl.nonBlockSymbol;
 
 import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
 import org.bullithulli.rpyparser.parser;
-import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.renpySpeakerText;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

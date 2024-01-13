@@ -28,7 +28,6 @@ public class TestrootSymbolTest {
                 "\tlabel five:\n" +
                 "label six:\n" +
                 "\tlabel seven:";
-
         parser renpyParser = new parser();
         rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
         ArrayList<renpyLabel> labels = root.getInnerLabels();

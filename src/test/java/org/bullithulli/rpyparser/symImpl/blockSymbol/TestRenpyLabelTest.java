@@ -1,6 +1,7 @@
 package org.bullithulli.rpyparser.symImpl.blockSymbol;
 
 import org.bullithulli.rpyparser.parser;
+import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class TestRenpyLabelTest {
     @Test
@@ -69,5 +71,40 @@ public class TestRenpyLabelTest {
                 """;
         parser renpyParser = new parser();
         assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1, true, true).trim(), rpyCode.trim());
+    }
+
+    // TODO: 1/13/24 work on this 
+    @Test
+    public void test5() {
+        String rpyCode = """
+                label one:
+                	label two:
+                	    return
+                		label three:
+                		    label xxxx:
+                	label four:
+                	return
+                	label five:
+                label six:
+                	label seven:
+                	jump seven
+                label seven:
+                jump nine
+                label eight:
+                    label nine:
+                        label ten:
+                            return
+                """;
+        parser renpyParser = new parser();
+        rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
+        renpyLabel one = root.getInnerLabelByName("one");
+        assertEquals("label three:", one.getInnerLabelByNameSearchRecursivly("three").getRENPY_TRIMMED_LINE());
+        assertNull(one.getInnerLabelByNameSearchRecursivly("six"));
+        assertNull(one.getInnerLabelByNameSearchRecursivly("sixxxx"));
+        assertEquals("label xxxx:", one.getInnerLabelByNameSearchRecursivly("xxxx").getRENPY_TRIMMED_LINE());
+        assertEquals("label five:", one.getInnerLabelByNameSearchRecursivly("five").getRENPY_TRIMMED_LINE());
+        assertEquals("label five:", root.getInnerLabelByNameSearchRecursivly("five").getRENPY_TRIMMED_LINE());
+        assertEquals("label ten:", root.getInnerLabelByNameSearchRecursivly("ten").getRENPY_TRIMMED_LINE());
+        assertNull(root.getInnerLabelByNameSearchRecursivly("texxxn"));
     }
 }
