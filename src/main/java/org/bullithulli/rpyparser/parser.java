@@ -6,6 +6,12 @@ import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.*;
@@ -13,7 +19,7 @@ import static org.bullithulli.utils.textUtils.countIndentations;
 import static org.bullithulli.utils.textUtils.countLeadingWhitespaces;
 
 public class parser {
-    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_][a-zA-Z0-9_,(\\)\\s\\t]*)\\s*:";
+    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.\\-\"'?][a-zA-Z0-9_,.\\-=\"(\\)\\s\\t'?\\|!]*)\\s*:";
     final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
     rootSymbol root = new rootSymbol(ROOT_FILE, "\n");
@@ -24,12 +30,56 @@ public class parser {
     Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
     Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
 
+    public static void main(String[] args) throws IOException {
+        parser Parser = new parser();
+        File f = new File("/tmp/script.rpy");
+        rootSymbol rootSymbol = (rootSymbol) Parser.parseFrom(f, false, 4);
+        String out = rootSymbol.getChainString(0, -1, true, true).trim();
+        System.out.println(out);
+        Files.write(Path.of("/tmp/out"), out.getBytes());
+    }
+
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
         // TODO: 1/13/24 add init based initlization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
         String[] linesArray = lines.split("\n");
         for (String untrimmedLine : linesArray) {
             String trimmedLine = untrimmedLine.trim();
-            if (trimmedLine.isEmpty()) {
+            if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
+                continue;//skip new lines, empty lines
+            }
+            String symbol = trimmedLine.split("\\s+")[0];
+            if (pattern_for_block_symbols.matcher(untrimmedLine).find()) {
+                if (symbol.startsWith("label")) {
+                    sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_LABEL);
+                } else {
+                    sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_GENERIC_BLOCK_SYMBOLS);
+                }
+            } else {
+                if (pattern_for_speaker_text.matcher(trimmedLine).find()) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_SPEAKER_TEXT);
+                } else if (pattern_for_no_speaker_texts.matcher(trimmedLine).find()) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_NO_SPEAKER_TEXT);
+                } else if (trimmedLine.startsWith("return")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_RETURN);
+                } else if (trimmedLine.startsWith("jump ")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_JUMP);
+                } else if (trimmedLine.startsWith("call ")) {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_CALL);
+                } else {
+                    nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_GENERIC_NON_BLOCK_SYMBOLS);
+                }
+            }
+        }
+        return root;
+    }
+
+    public renpySymbol parseFrom(File file, boolean basedOnTabCounts, int spaceSize) throws FileNotFoundException {
+        // TODO: 1/13/24 add init based initlization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
+        Scanner sc = new Scanner(file);
+        while (sc.hasNextLine()) {
+            String untrimmedLine = sc.nextLine();
+            String trimmedLine = untrimmedLine.trim();
+            if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
                 continue;//skip new lines, empty lines
             }
             String symbol = trimmedLine.split("\\s+")[0];

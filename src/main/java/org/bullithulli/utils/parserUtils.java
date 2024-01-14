@@ -27,7 +27,7 @@ public class parserUtils {
         renpySymbol oldSourceNext = source.getCHAIN_CHILD_SYMBOL();
         renpySymbol end_symbol_of_label_to_be_added = label_to_be_added.getLastChainSymbol(label_to_be_added.getHIERARCHY_LEVEL(), false, true, true);
         int h = source.getHIERARCHY_LEVEL();
-        if (source.getRenpySymbolType() == RENPY_SYMBOL_TYPE.RENPY_LABEL) {
+        if (source.isBlockSymbol()) {
             adjustHierarchyBy = 1;
         }
 

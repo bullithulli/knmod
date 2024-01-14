@@ -133,6 +133,7 @@ public abstract class renpySymbol {
         return out;
     }
 
+
     public String toString() {
         return getRENPY_UNTRIMMED_LINE();
     }
