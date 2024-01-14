@@ -4,8 +4,7 @@ import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
 
 import java.util.ArrayList;
 
-import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.RENPY_JUMP;
-import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.RENPY_RETURN;
+import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.*;
 import static org.bullithulli.utils.textUtils.getTabbedString;
 
 public abstract class renpySymbol {
@@ -102,6 +101,13 @@ public abstract class renpySymbol {
         this.CHAIN_CHILD_SYMBOL = CHAIN_CHILD_SYMBOL;
     }
 
+    /*
+    Similar:
+    getLastChainSymbol
+getChainSymbols
+getChainString
+writeChainString
+ */
     public String getChainString(int subtractIndents, int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy) {
         String out = "";
         if (includeSameHierarchy) {
@@ -138,12 +144,21 @@ public abstract class renpySymbol {
         return getRENPY_UNTRIMMED_LINE();
     }
 
-    public ArrayList<renpySymbol> getChainSymbols(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy, boolean stopOnJumpOrReturn) {
+    /*
+    Similar:
+    getLastChainSymbol
+getChainSymbols
+getChainString
+writeChainString
+ */
+    public ArrayList<renpySymbol> getChainSymbols(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy, boolean stopOnJumpOrReturn, boolean stopOnNewLabelFound, renpySymbol source) {
         ArrayList<renpySymbol> list = new ArrayList<>();
         //End Check
         RENPY_SYMBOL_TYPE TYPE = getRenpySymbolType();
-        if (stopOnJumpOrReturn) {// && (getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1) && includeSameHierarchy) {
-            if (TYPE == RENPY_RETURN || TYPE == RENPY_JUMP) { //not applicable for followLowerHierarchy
+        if (stopOnJumpOrReturn || stopOnNewLabelFound) {
+            if (stopOnNewLabelFound && TYPE == RENPY_LABEL && getHIERARCHY_LEVEL() == thresholdingLevel && this != source) {
+                return list;
+            } else if (TYPE == RENPY_RETURN || TYPE == RENPY_JUMP) { //not applicable for followLowerHierarchy
                 if ((getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1)) {
                     list.add(this);
                     return list;
@@ -165,7 +180,7 @@ public abstract class renpySymbol {
         //Do recursion
         if (getCHAIN_CHILD_SYMBOL() != null) {
             if (followLowerHierarchy) {
-                list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, true, includeSameHierarchy, stopOnJumpOrReturn));
+                list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, true, includeSameHierarchy, stopOnJumpOrReturn, stopOnNewLabelFound, source));
             } else {
                 /*
                 if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
@@ -175,7 +190,7 @@ public abstract class renpySymbol {
                 } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
                     return list;
                 } else {
-                    list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, false, includeSameHierarchy, stopOnJumpOrReturn));
+                    list.addAll(getCHAIN_CHILD_SYMBOL().getChainSymbols(thresholdingLevel, false, includeSameHierarchy, stopOnJumpOrReturn, stopOnNewLabelFound, source));
                 }
             }
         }
@@ -184,16 +199,24 @@ public abstract class renpySymbol {
 
     /**
      * when followLowerHierarchy is enabled, no point of setting includeSameHierarchy to false
+     * <p>
+     * Similar:
+     * getLastChainSymbol
+     * getChainSymbols
+     * getChainString
+     * writeChainString
      *
      * @param thresholdingLevel
      * @param followLowerHierarchy
      * @param includeSameHierarchy
      * @return
      */
-    public renpySymbol getLastChainSymbol(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy, boolean stopOnJumpOrReturn) {
+    public renpySymbol getLastChainSymbol(int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy, boolean stopOnJumpOrReturn, boolean stopOnNewLabelFound, renpySymbol source) {
         RENPY_SYMBOL_TYPE TYPE = getRenpySymbolType();
-        if (stopOnJumpOrReturn) {// && (getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1) && includeSameHierarchy) {
-            if (TYPE == RENPY_RETURN || TYPE == RENPY_JUMP) { //not applicable for followLowerHierarchy
+        if (stopOnJumpOrReturn || stopOnNewLabelFound) {
+            if (stopOnNewLabelFound && TYPE == RENPY_LABEL && getHIERARCHY_LEVEL() == thresholdingLevel && this != source) {
+                return getCHAIN_PARENT_SYMBOL();
+            } else if (TYPE == RENPY_RETURN || TYPE == RENPY_JUMP) {
                 if ((getHIERARCHY_LEVEL() == thresholdingLevel || getHIERARCHY_LEVEL() == thresholdingLevel + 1)) {
                     return this;
                 }
@@ -202,7 +225,7 @@ public abstract class renpySymbol {
 
         if (getCHAIN_CHILD_SYMBOL() != null) {
             if (followLowerHierarchy) {
-                return getCHAIN_CHILD_SYMBOL().getLastChainSymbol(thresholdingLevel, true, includeSameHierarchy, stopOnJumpOrReturn);
+                return getCHAIN_CHILD_SYMBOL().getLastChainSymbol(thresholdingLevel, true, includeSameHierarchy, stopOnJumpOrReturn, stopOnNewLabelFound, source);
             } else {
                 /*
                 if SameHierarchy content display is enabled and if nextLine of rpy code is in next low level hierarchy stop processing child.
@@ -212,7 +235,7 @@ public abstract class renpySymbol {
                 } else if (!includeSameHierarchy && getCHAIN_CHILD_SYMBOL().getHIERARCHY_LEVEL() <= thresholdingLevel) {
                     return this;
                 } else {
-                    return getCHAIN_CHILD_SYMBOL().getLastChainSymbol(thresholdingLevel, false, includeSameHierarchy, stopOnJumpOrReturn);
+                    return getCHAIN_CHILD_SYMBOL().getLastChainSymbol(thresholdingLevel, false, includeSameHierarchy, stopOnJumpOrReturn, stopOnNewLabelFound, source);
                 }
             }
         }

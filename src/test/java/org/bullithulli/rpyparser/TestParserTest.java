@@ -1,8 +1,14 @@
 package org.bullithulli.rpyparser;
 
+import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
+import org.bullithulli.rpyparser.symImpl.rootSymbol;
+import org.bullithulli.utils.parserUtils;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
@@ -148,7 +154,7 @@ public class TestParserTest {
     }
 
     @Test
-    public void parseTest6() {
+    public void parseTest6() throws IOException {
         String content = readFileContents("parserTests/test1.rpy");
         String sol = """
                 screen StatsUI:
@@ -294,6 +300,83 @@ public class TestParserTest {
                 		action Jump ("mwomall")
                 """;
         parser renpyParser = new parser();
-        assertEquals(sol.trim(), renpyParser.parseLine(content, false, 4).getChainString(0, -1, true, true).trim());
+        rootSymbol root = (rootSymbol) renpyParser.parseLine(content, false, 4);
+        assertEquals(sol.trim(), root.getChainString(0, -1, true, true).trim());
+        parserUtils.writeChainString("/tmp/out", root, 0, -1, true, true);
+        String out = new String(Files.readAllBytes(Paths.get("/tmp/out")));
+        assertEquals(out.trim(), root.getChainString(0, -1, true, true).trim());
+    }
+
+    @Test
+    public void test1() {
+        String rpyCode = """
+                label x:
+                    label y:
+                        anwar "sda"
+                    return
+                call y
+                jump y
+                jump x
+                """;
+        parser renpyParser = new parser();
+        renpyParser.parseLine(rpyCode, false, 4);
+        assertEquals(1, renpyParser.pathMatrix.get("x").size());
+        assertEquals(2, renpyParser.pathMatrix.get("y").size());
+        // TODO: 1/14/24 path matrix updation after adding and dleteinng albels
+    }
+
+    @Test
+    public void test2() {
+        String vanilla = """
+                label A:
+                	label B:
+                		anwar "hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String ip = """
+                label patch1:
+                	anwar "Hello, mom"
+                label patch2:
+                	anwar "bye, mom"
+                """;
+        parser vanillaRenpyParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaRenpyParser.parseLine(vanilla, true, 4);
+        parser iParser = new parser();
+        rootSymbol iRoot = (rootSymbol) iParser.parseLine(ip, true, 4);
+        renpyLabel patch1 = iRoot.getInnerLabelByName("patch1");
+        renpyLabel B = vRoot.getInnerLabelByNameSearchRecursivly("B");
+        renpyLabel A = (renpyLabel) B.getHIERARCHY_PARENT_SYMBOL();
+
+        parserUtils.deleteInnerLabel(B, vanillaRenpyParser);
+        parserUtils.addLabelAfter(A, vanillaRenpyParser, patch1);
+
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("""
+                label patch2:
+                	anwar "bye, mom"
+                """.trim(), iRoot.getChainString(0, -1, true, true).trim());
+
+        renpyLabel F = vRoot.getInnerLabelByNameSearchRecursivly("F");
+        renpyLabel E = (renpyLabel) F.getCHAIN_PARENT_SYMBOL();
+        renpyLabel patch2 = iRoot.getInnerLabelByNameSearchRecursivly("patch2");
+        parserUtils.deleteInnerLabel(F, vanillaRenpyParser);
+        parserUtils.addLabelAfter(E, vanillaRenpyParser, patch2);
+        //System.out.println(vRoot.getChainString(0, -1, true, true).trim());
+        // TODO: 1/14/24 Wrong. need to fix
+        //System.out.println("---------------------");
+        //System.out.println(iRoot.getChainString(0, -1, true, true).trim());
     }
 }

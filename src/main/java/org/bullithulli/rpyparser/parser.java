@@ -5,12 +5,13 @@ import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
+import org.bullithulli.utils.parserUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -19,9 +20,14 @@ import static org.bullithulli.utils.textUtils.countIndentations;
 import static org.bullithulli.utils.textUtils.countLeadingWhitespaces;
 
 public class parser {
-    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.\\-\"'?][a-zA-Z0-9_,.\\-=\"(\\)\\s\\t'?\\|!]*)\\s*:";
+    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.$\\-\"'’\\?][a-zA-Z0-9_,\\<\\>.…&+\\-=\"(\\)\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*[:|\\{]";
     final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
+    /**
+     * This will store path matrix, like
+     * labelName,ArrayListOfSymbol who will call or jumps
+     */
+    public HashMap<String, ArrayList<renpySymbol>> pathMatrix = new HashMap<>();
     rootSymbol root = new rootSymbol(ROOT_FILE, "\n");
     int CURRENT_HIERARCHY = 0;
     renpySymbol previousHierarchyParent = root;
@@ -30,14 +36,22 @@ public class parser {
     Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
     Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
 
+    /*
     public static void main(String[] args) throws IOException {
         parser Parser = new parser();
         File f = new File("/tmp/script.rpy");
         rootSymbol rootSymbol = (rootSymbol) Parser.parseFrom(f, false, 4);
-        String out = rootSymbol.getChainString(0, -1, true, true).trim();
-        System.out.println(out);
-        Files.write(Path.of("/tmp/out"), out.getBytes());
-    }
+        File f2 = new File("/tmp/iscript.rpy");
+        parser IParser = new parser();
+        rootSymbol irootSymbol = (rootSymbol) IParser.parseFrom(f2, true, 4);
+        renpyLabel ip = irootSymbol.getInnerLabelByName("lb_w4eow_s_dinner_bedroom_ending_1_i");
+        renpyLabel sp = rootSymbol.getInnerLabelByName("lb_w4eow_s_dinner_bedroom_ending_1");
+        System.out.println(ip);
+        System.out.println(sp);
+        //String out = rootSymbol.getChainString(0, -1, true, true).trim();
+        parserUtils.writeChainString("/tmp/out", rootSymbol, 0, -1, true, true);
+        parserUtils.writeChainString("/tmp/iout", irootSymbol, 0, -1, true, true);
+    }*/
 
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
         // TODO: 1/13/24 add init based initlization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
@@ -113,7 +127,7 @@ public class parser {
         if (symbolType == RENPY_LABEL) {
             theSymbol = new renpyLabel(RENPY_LABEL, untrimmedLine);
         } else {
-            theSymbol = new renpyGenericBlockSymbol(RENPY_LABEL, untrimmedLine);
+            theSymbol = new renpyGenericBlockSymbol(RENPY_GENERIC_BLOCK_SYMBOLS, untrimmedLine);
         }
         int h = countIndentations(countLeadingWhitespaces(untrimmedLine), basedOnTabCounts, spaceSize);
         if (h == CURRENT_HIERARCHY) {
@@ -167,8 +181,22 @@ public class parser {
             theSymbol = new renpyNoSpeakerText(symbolType, untrimmedLine);
         } else if (symbolType == RENPY_CALL) {
             theSymbol = new renpyCall(symbolType, untrimmedLine);
+            String labelName = ((renpyCall) theSymbol).getCallINTOLabelName();
+            ArrayList<renpySymbol> list = pathMatrix.get(labelName);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(theSymbol);
+            pathMatrix.put(labelName, list);
         } else if (symbolType == RENPY_JUMP) {
             theSymbol = new renpyJump(symbolType, untrimmedLine);
+            String labelName = ((renpyJump) theSymbol).getJumpINTOLabelName();
+            ArrayList<renpySymbol> list = pathMatrix.get(labelName);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+            list.add(theSymbol);
+            pathMatrix.put(labelName, list);
         } else if (symbolType == RENPY_RETURN) {
             theSymbol = new renpyReturn(symbolType, untrimmedLine);
         } else {

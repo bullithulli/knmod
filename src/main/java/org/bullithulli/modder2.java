@@ -14,7 +14,7 @@ import static org.bullithulli.feature.labelLookup.*;
 
 
 public class modder2 {
-    public static final String version = "vNov2-2023";
+    public static final String version = "Jan-2024-alpha";
     public static final String eol = "\n";
     public static final String indent = "    ";
     public static String realArgs;
