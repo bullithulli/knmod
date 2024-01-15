@@ -1,5 +1,6 @@
 package org.bullithulli.rpyparser;
 
+import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyGenericBlockSymbol;
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.junit.Test;
@@ -30,18 +31,18 @@ public class TestrootSymbolTest {
                 "\tlabel seven:";
         parser renpyParser = new parser();
         rootSymbol root = (rootSymbol) renpyParser.parseLine(rpyCode, true, 2);
-        ArrayList<renpyLabel> labels = root.getInnerLabels();
-        assertEquals(labels.size(), 2);
-        assertEquals("one", labels.get(0).getLabelName());
+        ArrayList<renpyGenericBlockSymbol> innerBlocks = root.getInnerBlocks();
+        assertEquals(innerBlocks.size(), 2);
+        assertEquals("one", ((renpyLabel) innerBlocks.get(0)).getLabelName());
         assertEquals("six", root.getInnerLabelByName("six").getLabelName());
         assertNull(root.getInnerLabelByName("ten"));
 
         renpyLabel one = root.getInnerLabelByName("one");
-        labels = one.getInnerLabels();
-        assertEquals(labels.size(), 3);
-        assertEquals("two", labels.get(0).getLabelName());
-        assertEquals("four", labels.get(1).getLabelName());
-        assertEquals("five", labels.get(2).getLabelName());
+        innerBlocks = one.getInnerBlocks();
+        assertEquals(innerBlocks.size(), 3);
+        assertEquals("two", ((renpyLabel) innerBlocks.get(0)).getLabelName());
+        assertEquals("four", ((renpyLabel) innerBlocks.get(1)).getLabelName());
+        assertEquals("five", ((renpyLabel) innerBlocks.get(2)).getLabelName());
         assertNull(one.getInnerLabelByName("ten"));
 
         String temp =

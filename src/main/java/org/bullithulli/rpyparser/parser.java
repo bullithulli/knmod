@@ -45,7 +45,7 @@ public class parser {
         parser patchParser = new parser();
         rootSymbol pRoot = (rootSymbol) patchParser.parseFrom(patchFile, true, 4);
         parserUtils.writeChainString("/tmp/out", vRoot, 0, -1, true, true);
-        String labelList[]={"lb_intro_07_mc_call_s_1",
+        String[] labelList = {"lb_intro_07_mc_call_s_1",
                 "lb_intro_07_mc_call_s_3",
                 "lb_intro_07_mc_call_s_5",
                 "lb_intro_08_mc_nicole_go_1",
@@ -64,15 +64,15 @@ public class parser {
                 "lb_intro_12_arrive_new_home_2",
                 "lb_intro_12_arrive_new_home_5",
                 "lb_intro_07_mc_call_s_0"};
-        for(int i=0;i<labelList.length;i++) {
-            renpyLabel lb_w4eow_s_dinner_bedroom_ending_1_i = pRoot.getInnerLabelByNameSearchRecursivly(labelList[i]+"_i");
+        for (int i = 0; i < labelList.length; i++) {
+            renpyLabel lb_w4eow_s_dinner_bedroom_ending_1_i = pRoot.getInnerLabelByNameSearchRecursivly(labelList[i] + "_i");
             renpyLabel lb_w4eow_s_dinner_bedroom_ending_1 = vRoot.getInnerLabelByNameSearchRecursivly(labelList[i]);
-            if(lb_w4eow_s_dinner_bedroom_ending_1_i==null||lb_w4eow_s_dinner_bedroom_ending_1==null){
-                if(lb_w4eow_s_dinner_bedroom_ending_1_i==null){
-                    System.out.println(labelList[i]+"_i is null");
+            if (lb_w4eow_s_dinner_bedroom_ending_1_i == null || lb_w4eow_s_dinner_bedroom_ending_1 == null) {
+                if (lb_w4eow_s_dinner_bedroom_ending_1_i == null) {
+                    System.out.println(labelList[i] + "_i is null");
                 }
-                if(lb_w4eow_s_dinner_bedroom_ending_1==null){
-                    System.out.println(labelList[i]+" is null");
+                if (lb_w4eow_s_dinner_bedroom_ending_1 == null) {
+                    System.out.println(labelList[i] + " is null");
                 }
                 System.out.println("Fucked");
                 System.exit(0);
