@@ -6,6 +6,7 @@ package org.bullithulli;
 
 import org.bullithulli.feature.knmod;
 import org.bullithulli.feature.labelLookup;
+import org.bullithulli.feature.labelReplacer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ public class modder2 {
     public knmod knmod;
     boolean isKnMODFeatureRequested = false;
     boolean isLabelLookUpFeatureRequested = false;
+    boolean isLabelReplaceFeatureRequested = false;
     boolean removeFromSourceOnLabelHit = false;
     boolean stopLabelLookUpOnceNewLabelFound = true;
     boolean stopOnNextLabelJump = false;
@@ -30,9 +32,13 @@ public class modder2 {
     String inputFileForRequestedFeature = null;
     String outputFileForRequestedFeature = null;
     String lookupKey = null;
+    boolean indentTypeTAB = true;
+    int indentSize = 4;
     ArrayList<String> ListOfIgnoreLabels = new ArrayList<>();
     labelLookup lookupLabel;
     boolean followScreenCalls = false;
+    String patchFrom = null;
+    String replaceBy = null;
 
     public modder2() {
         knmod = new knmod();
@@ -59,7 +65,7 @@ public class modder2 {
         System.out.println("  -v, --version             Display version information");
         System.out.println("  --file=FILENAME           Specify a file");
         System.out.println("  --outfile=FILENAME        Destination output. Defaults to /tmp/out");
-        System.out.println("  --feature=FEATURE_NAME    The Feature you want to use. Available, KNMOD,LABEL_LOOKUP");
+        System.out.println("  --feature=FEATURE_NAME    The Feature you want to use. Available, KNMOD,LABEL_LOOKUP, LABEL_REPLACE");
         System.out.println("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --skipLinesUpto, --ignoreLines --ignoreLinesContaining --silenceKNMOD_for");
         System.out.println("                                            --skipLinesUpto=INT                     Don't process these lines in the requested feature. Defaults to 0");
         System.out.println("                                            --ignoreLines=startsWith1,startW2       Skips the line that starts with <list>. Default: BULLITULLI-MODDER2");
@@ -72,8 +78,13 @@ public class modder2 {
         System.out.println("                                            --stopOnNextLabelJump=BOOLEAN       Stop lookup label once new jump is found within definition. Defaults to false");
         System.out.println("                                            --followInnerJumps=BOOLEAN          Continue lookups if innerJumps are found, and proceed same with innerJumps. Defaults to false");
         System.out.println("                                            --followInnerCalls=BOOLEAN          Continue lookups if innerCalls are found, and proceed same with innerCalls labels. Defaults to false");
-        System.out.println("                                            --followScreenCalls=BOOLEAN          Continue lookups if innerCalls for screen are found, and proceed same with innerCalls labels. Defaults to false");
+        System.out.println("                                            --followScreenCalls=BOOLEAN         Continue lookups if innerCalls for screen are found, and proceed same with innerCalls labels. Defaults to false");
         System.out.println("                                            --ignoreLabels=label1,label2        List of Labels to ignore while processing. Defaults to []");
+        System.out.println("                            LABEL_REPLACE:   mandatory fields: --file --patchFrom --replaceBy; Optional fields: --outfile --indentType --indentSize");
+        System.out.println("                                             --patchFrom=/path/toFile           A patch rpy file where you want to patch the source file");
+        System.out.println("                                             --replaceBy=LIST[STR->STR]         A list of labels you want to patch, eg. --replaceBy=labelA->labelPatchA,labelB->labelPatchB. Defaults to []");
+        System.out.println("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to TAB");
+        System.out.println("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
     }
 
     public void verifyAndExecuteLabelLookupFeature(String lookupKey, String inputFilePathForRequestedFeature, boolean removeFromSourceOnMatch, boolean stopAfterNextLabelFound, boolean stopOnNextLabelJump, boolean followInnerJumps, boolean followInnerCalls, boolean followScreenCalls) {
@@ -118,11 +129,39 @@ public class modder2 {
         knmod.feature_knmodit(inputFilePathForRequestedFeature, skipLines, destinationFileOPath);
     }
 
+    public void verifyAndExecuteLabelReplaceFeature(String sourceFile, String patchFile, String destinationFile, String listOfLabels, boolean isTabIntended, int spaceSize) throws Exception {
+        // TODO: 1/15/24 Write UnitTests 
+        boolean forceExit = false;
+        if (sourceFile == null) {
+            System.err.println("You must pass --file parameter with LABEL_REPLACE feature");
+            forceExit = true;
+        }
+        if (patchFile == null) {
+            System.err.println("You must pass --patchFile parameter with LABEL_REPLACE feature");
+            forceExit = true;
+        }
+        if (listOfLabels == null) {
+            System.err.println("You must pass --replaceBy parameter with LABEL_REPLACE feature");
+            forceExit = true;
+        }
+        if (forceExit) {
+            System.exit(2);
+        }
+
+        if (destinationFile == null) {
+            System.err.println("using default destination location of /tmp/out. or pass --outfile");
+            destinationFile = "/tmp/out";
+        }
+        new labelReplacer().replace(sourceFile, patchFile, destinationFile, listOfLabels, isTabIntended, spaceSize);
+    }
+
     public void executeArgs() throws Exception {
         if (isKnMODFeatureRequested) {
             verifyAndExecuteKNModFeature(inputFileForRequestedFeature, outputFileForRequestedFeature, skipLinesUpto);
         } else if (isLabelLookUpFeatureRequested) {
             verifyAndExecuteLabelLookupFeature(lookupKey, inputFileForRequestedFeature, removeFromSourceOnLabelHit, stopLabelLookUpOnceNewLabelFound, stopOnNextLabelJump, followInnerJumps, followInnerCalls, followScreenCalls);
+        } else if (isLabelReplaceFeatureRequested) {
+            verifyAndExecuteLabelReplaceFeature(inputFileForRequestedFeature, patchFrom, outputFileForRequestedFeature, replaceBy, indentTypeTAB, indentSize);
         } else {
             System.err.println("No action performed. No feature selected");
         }
@@ -140,6 +179,7 @@ public class modder2 {
                 switch (arg.substring("--feature=".length())) {
                     case "KNMOD" -> isKnMODFeatureRequested = true;
                     case "LABEL_LOOKUP" -> isLabelLookUpFeatureRequested = true;
+                    case "LABEL_REPLACE" -> isLabelReplaceFeatureRequested = true;
                     default -> System.err.println("Unknown Feature requested");
                 }
             } else if (arg.startsWith("--file=")) {
@@ -171,6 +211,21 @@ public class modder2 {
                 knmod.skipLinesThatContainsWord_FOR_KNMOD.addAll(Arrays.asList(arg.substring("--ignoreLinesContaining=".length()).split(",")));
             } else if (arg.startsWith("--followScreenCalls=")) {
                 followScreenCalls = Boolean.parseBoolean(arg.substring("--followScreenCalls=".length()));
+            } else if (arg.startsWith("--indentSize=")) {
+                indentSize = Integer.parseInt(arg.substring("--indentSize=".length()));
+            } else if (arg.startsWith("--replaceBy=")) {
+                replaceBy = arg.substring("--replaceBy=".length());
+            } else if (arg.startsWith("--patchFrom=")) {
+                patchFrom = arg.substring("--patchFrom=".length());
+            } else if (arg.startsWith("--indentType=")) {
+                switch (arg.substring("--indentType=".length()).toUpperCase()) {
+                    case "TAB" -> indentTypeTAB = true;
+                    case "SPACE" -> indentTypeTAB = false;
+                    default -> {
+                        System.err.println("Unknown indent Type " + arg.substring("--indentType=".length()));
+                        System.exit(2);
+                    }
+                }
             } else {
                 System.err.println("Unknown parameter " + arg);
                 displayHelp();

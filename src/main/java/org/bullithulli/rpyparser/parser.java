@@ -5,7 +5,6 @@ import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
-import org.bullithulli.utils.parserUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,55 +34,6 @@ public class parser {
     Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
     Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
 
-
-    public static void main(String[] args) throws Exception {
-        parser vanillaParser = new parser();
-        File vanillaFile = new File("/tmp/script.rpy");
-        rootSymbol vRoot = (rootSymbol) vanillaParser.parseFrom(vanillaFile, true, 4);
-
-        File patchFile = new File("/tmp/iscript.rpy");
-        parser patchParser = new parser();
-        rootSymbol pRoot = (rootSymbol) patchParser.parseFrom(patchFile, true, 4);
-        parserUtils.writeChainString("/tmp/out", vRoot, 0, -1, true, true);
-        String[] labelList = {"lb_intro_07_mc_call_s_1",
-                "lb_intro_07_mc_call_s_3",
-                "lb_intro_07_mc_call_s_5",
-                "lb_intro_08_mc_nicole_go_1",
-                "lb_intro_08_mc_nicole_go_3",
-                "lb_intro_08_mc_nicole_go_5",
-                "lb_intro_08_mc_nicole_go_7",
-                "lb_intro_09_nicole_evening_sex_1",
-                "lb_intro_09_nicole_evening_sex_3",
-                "lb_intro_09_nicole_evening_sex_cum_1",
-                "lb_intro_10_mc_packs_1",
-                "lb_intro_10_mc_packs_3",
-                "lb_intro_11_arrives_sunshine_bay_1",
-                "lb_intro_11_arrives_sunshine_bay_3",
-                "lb_intro_11_arrives_sunshine_bay_5",
-                "lb_intro_12_arrive_new_home_1",
-                "lb_intro_12_arrive_new_home_2",
-                "lb_intro_12_arrive_new_home_5",
-                "lb_intro_07_mc_call_s_0"};
-        for (int i = 0; i < labelList.length; i++) {
-            renpyLabel lb_w4eow_s_dinner_bedroom_ending_1_i = pRoot.getInnerLabelByNameSearchRecursivly(labelList[i] + "_i");
-            renpyLabel lb_w4eow_s_dinner_bedroom_ending_1 = vRoot.getInnerLabelByNameSearchRecursivly(labelList[i]);
-            if (lb_w4eow_s_dinner_bedroom_ending_1_i == null || lb_w4eow_s_dinner_bedroom_ending_1 == null) {
-                if (lb_w4eow_s_dinner_bedroom_ending_1_i == null) {
-                    System.out.println(labelList[i] + "_i is null");
-                }
-                if (lb_w4eow_s_dinner_bedroom_ending_1 == null) {
-                    System.out.println(labelList[i] + " is null");
-                }
-                System.out.println("Fucked");
-                System.exit(0);
-            }
-            parserUtils.replaceLabel(lb_w4eow_s_dinner_bedroom_ending_1, vanillaParser, lb_w4eow_s_dinner_bedroom_ending_1_i, patchParser);
-        }
-
-
-        parserUtils.writeChainString("/tmp/out_patched", vRoot, 0, -1, true, true);
-        //parserUtils.writeChainString("/tmp/iout", pRoot, 0, -1, true, true);
-    }
 
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
         // TODO: 1/13/24 add init based initialization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
