@@ -590,4 +590,148 @@ public class TestParserUtilsTest {
         String out = new String(Files.readAllBytes(Paths.get("/tmp/out")));
         assertEquals(out.trim(), sourceRoot.getChainString(0, -1, true, true).trim());
     }
+
+    @Test
+    public void test12() throws Exception {
+        String rpyCode = """
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                	label E:
+                		label F:
+                	dasdas
+                	label G:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        parser patchParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(rpyCode, true, 2);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel G = vRoot.getInnerLabelByNameSearchRecursivly("G");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.replaceLabel(G, vanillaParser, patch, patchParser);
+        assertEquals("""
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                	label E:
+                		label F:
+                	dasdas
+                	label patch:
+                		anwar "hey, mom"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("", pRoot.getChainString(0, -1, true, true).trim());
+    }
+
+    @Test
+    public void test13() throws Exception {
+        String rpyCode = """
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                	label E:
+                		label F:
+                	dasdas
+                	label G:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        parser patchParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(rpyCode, true, 2);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel D = vRoot.getInnerLabelByNameSearchRecursivly("D");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.replaceLabel(D, vanillaParser, patch, patchParser);
+        assertEquals("""
+                label A:
+                	label B:
+                		label C:
+                			label patch:
+                				anwar "hey, mom"
+                	label E:
+                		label F:
+                	dasdas
+                	label G:
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("", pRoot.getChainString(0, -1, true, true).trim());
+    }
+
+    @Test
+    public void test14() throws Exception {
+        String rpyCode = """
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                	label E:
+                		label F:
+                	dasdas
+                	label G:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        parser patchParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(rpyCode, true, 2);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.replaceLabel(E, vanillaParser, patch, patchParser);
+        assertEquals("""
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                	label patch:
+                		anwar "hey, mom"
+                	label G:
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("", pRoot.getChainString(0, -1, true, true).trim());
+    }
+
+    @Test
+    public void test15() throws Exception {
+        String rpyCode = """
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                label E:
+                	label F:
+                dasdas
+                label G:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        parser patchParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(rpyCode, true, 2);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.replaceLabel(E, vanillaParser, patch, patchParser);
+        assertEquals("""
+                label A:
+                	label B:
+                		label C:
+                			label D:
+                label patch:
+                	anwar "hey, mom"
+                label G:
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("", pRoot.getChainString(0, -1, true, true).trim());
+    }
 }

@@ -173,4 +173,20 @@ public class parserUtils {
         }
         writer.close();
     }
+
+    public static void replaceLabel(renpyLabel sourceLabel, parser sourceParser, renpyLabel patchLabel, parser patchParser) throws Exception {
+        renpySymbol sourceChainParent = sourceLabel.getCHAIN_PARENT_SYMBOL();
+
+        int sourceChainParentHierarchy = sourceChainParent.getHIERARCHY_LEVEL();
+        int sourceHierarchy = sourceLabel.getHIERARCHY_LEVEL();
+        parserUtils.deleteInnerLabel(sourceLabel, sourceParser);
+        if (sourceHierarchy == sourceChainParentHierarchy) {
+            parserUtils.addLabelAfter(sourceChainParent, sourceParser, patchLabel, RENPY_SYMBOL_POSITION.CHAIN_DOWN, 0);
+        } else if (sourceHierarchy > sourceChainParentHierarchy) {
+            parserUtils.addLabelAfter(sourceChainParent, sourceParser, patchLabel, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
+        } else {
+            //putToLeft sourceChainParentHierarchy-sourceHierarchy
+            parserUtils.addLabelAfter(sourceChainParent, sourceParser, patchLabel, RENPY_SYMBOL_POSITION.CHAIN_LEFT, sourceChainParentHierarchy - sourceHierarchy);
+        }
+    }
 }

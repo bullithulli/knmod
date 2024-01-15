@@ -5,9 +5,11 @@ import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
+import org.bullithulli.utils.parserUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -34,11 +36,11 @@ public class parser {
     Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
     Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
 
-    /*
+
     public static void main(String[] args) throws IOException {
         parser Parser = new parser();
         File f = new File("/tmp/script.rpy");
-        rootSymbol rootSymbol = (rootSymbol) Parser.parseFrom(f, false, 4);
+        rootSymbol rootSymbol = (rootSymbol) Parser.parseFrom(f, true, 4);
         File f2 = new File("/tmp/iscript.rpy");
         parser IParser = new parser();
         rootSymbol irootSymbol = (rootSymbol) IParser.parseFrom(f2, true, 4);
@@ -49,7 +51,7 @@ public class parser {
         //String out = rootSymbol.getChainString(0, -1, true, true).trim();
         parserUtils.writeChainString("/tmp/out", rootSymbol, 0, -1, true, true);
         parserUtils.writeChainString("/tmp/iout", irootSymbol, 0, -1, true, true);
-    }*/
+    }
 
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
         // TODO: 1/13/24 add init based initialization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
