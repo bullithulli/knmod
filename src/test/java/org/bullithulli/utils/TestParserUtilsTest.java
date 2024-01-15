@@ -1,12 +1,12 @@
 package org.bullithulli.utils;
 
+import org.bullithulli.rpyparser.RENPY_SYMBOL_POSITION;
 import org.bullithulli.rpyparser.parser;
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class TestParserUtilsTest {
+
     final String rpyCode = """
             label one:
             	label two:
@@ -33,6 +34,290 @@ public class TestParserUtilsTest {
             		label ten:
             			return
             """;
+
+    @Test
+    public void test4() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                				label patch:
+                					anwar "hey, mom"
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label E:");
+    }
+
+    @Test
+    public void test6() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_DOWN, 0);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                			label patch:
+                				anwar "hey, mom"
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label D:");
+    }
+
+    @Test
+    public void test7() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_LEFT, 0);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                			label patch:
+                				anwar "hey, mom"
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label D:");
+    }
+
+    @Test
+    public void test8() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_LEFT, 1);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                		label patch:
+                			anwar "hey, mom"
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label C:");
+    }
+
+    @Test
+    public void test9() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label B:
+                		anwar "Hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_LEFT, 2);
+        assertEquals("""
+                label A:
+                	label B:
+                		anwar "Hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                	label patch:
+                		anwar "hey, mom"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label A:");
+    }
+
+    @Test
+    public void test10() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label B:
+                		anwar "Hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_LEFT, 3);
+        assertEquals("""
+                label A:
+                	label B:
+                		anwar "Hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                label patch:
+                	anwar "hey, mom"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "");
+    }
+
+    @Test(expected = Exception.class)
+    public void test11() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label B:
+                		anwar "Hello, landlord"
+                	label C:
+                		label D:
+                			label E:
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(E, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_LEFT, 4);
+    }
+
+    @Test
+    public void test5() throws Exception {
+        String vanillaRpyCode = """
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                				"Loading"
+                		label F:
+                			anwar "Bye, landlord"
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaRpyCode, true, 2);
+        parser patchParser = new parser();
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel E = vRoot.getInnerLabelByNameSearchRecursivly("E");
+        renpySymbol loading = E.getCHAIN_CHILD_SYMBOL();
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.addLabelAfter(loading, vanillaParser, patch, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                				"Loading"
+                				label patch:
+                					anwar "hey, mom"
+                		label F:
+                			anwar "Bye, landlord"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(patch.getHIERARCHY_PARENT_SYMBOL().getRENPY_TRIMMED_LINE(), "label E:");
+    }
 
     @Test
     public void test1() {
@@ -149,7 +434,7 @@ public class TestParserUtilsTest {
     }
 
     @Test
-    public void test2() {
+    public void test2() throws Exception {
         parser oldRenpyParser = new parser();
         String rpyCode1 = """
                 label one:
@@ -171,13 +456,13 @@ public class TestParserUtilsTest {
         rootSymbol newRootSymbol = (rootSymbol) newRenpyParser.parseLine(newRpyCode, true, 2);
         renpyLabel D = newRootSymbol.getInnerLabelByNameSearchRecursivly("D");
         renpyLabel xxxx = oldRootSymbol.getInnerLabelByNameSearchRecursivly("xxxx");
-        parserUtils.addLabelAfter(xxxx, oldRenpyParser, D);
+        parserUtils.addLabelAfter(xxxx, oldRenpyParser, D, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
         renpyLabel DD = oldRootSymbol.getInnerLabelByNameSearchRecursivly("D");
         assertEquals(2, DD.getHIERARCHY_LEVEL());
     }
 
     @Test
-    public void test3() throws IOException {
+    public void test3() throws Exception {
         parser sourceParser = new parser();
         rootSymbol sourceRoot = (rootSymbol) sourceParser.parseLine(rpyCode, true, 2);
         parser patchParser = new parser();
@@ -196,7 +481,7 @@ public class TestParserUtilsTest {
         renpyLabel D = patchRoot.getInnerLabelByNameSearchRecursivly("D");
         renpyLabel xxxx = sourceRoot.getInnerLabelByNameSearchRecursivly("xxxx");
         parserUtils.deleteInnerLabel(D, patchParser);
-        parserUtils.addLabelAfter(xxxx, sourceParser, D);
+        parserUtils.addLabelAfter(xxxx, sourceParser, D, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
         assertEquals("""
                 label one:
                 	label two:
@@ -232,7 +517,7 @@ public class TestParserUtilsTest {
         renpySymbol variable = DD.getCHAIN_CHILD_SYMBOL(); //x=6
         renpyLabel B = patchRoot.getInnerLabelByNameSearchRecursivly("B");
         parserUtils.deleteInnerLabel(B, patchParser);
-        parserUtils.addLabelAfter(variable, sourceParser, B);
+        parserUtils.addLabelAfter(variable, sourceParser, B, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
         assertEquals("""
                 label one:
                 	label two:
@@ -267,7 +552,7 @@ public class TestParserUtilsTest {
         renpyLabel eight = sourceRoot.getInnerLabelByNameSearchRecursivly("eight");
         renpyLabel A = patchRoot.getInnerLabelByNameSearchRecursivly("A");
         parserUtils.deleteInnerLabel(A, patchParser);
-        parserUtils.addLabelAfter(eight, sourceParser, A);
+        parserUtils.addLabelAfter(eight, sourceParser, A, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
 
         String xx = """
                 label one:

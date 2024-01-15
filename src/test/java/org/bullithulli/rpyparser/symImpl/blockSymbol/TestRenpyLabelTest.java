@@ -76,7 +76,6 @@ public class TestRenpyLabelTest {
         assertEquals(renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1, true, true).trim(), rpyCode.trim());
     }
 
-    // TODO: 1/13/24 work on this 
     @Test
     public void test5() {
         String rpyCode = """

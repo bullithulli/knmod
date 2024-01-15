@@ -1,5 +1,6 @@
 package org.bullithulli.utils;
 
+import org.bullithulli.rpyparser.RENPY_SYMBOL_POSITION;
 import org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE;
 import org.bullithulli.rpyparser.parser;
 import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
@@ -33,31 +34,39 @@ public class parserUtils {
         System.gc();
     }
 
-    public static void addLabelAfter(renpySymbol source, parser sourceParser, renpyLabel patchLabel) {
+    public static void addLabelAfter(renpySymbol sourceRenpySymbol, parser sourceParser, renpyLabel patchLabel, RENPY_SYMBOL_POSITION position, int leftShiftBy) throws Exception {
         int adjustHierarchyBy = 0;
-        renpySymbol sourceNextChildSymbol = source.getCHAIN_CHILD_SYMBOL();
-        renpySymbol end_symbol_of_label_to_be_added = patchLabel.getLastChainSymbol(patchLabel.getHIERARCHY_LEVEL(), false, true, true, true, patchLabel);
-        int h = source.getHIERARCHY_LEVEL();
-        if (source.isBlockSymbol()) {
-            adjustHierarchyBy = 1;
+        renpySymbol sourceChainChildSymbol = sourceRenpySymbol.getCHAIN_CHILD_SYMBOL();
+        renpySymbol lastSymbolFromPatchLabel = patchLabel.getLastChainSymbol(patchLabel.getHIERARCHY_LEVEL(), false, true, true, true, patchLabel);
+
+        int sourceHierarchyLevel = sourceRenpySymbol.getHIERARCHY_LEVEL();
+        if (sourceRenpySymbol.isBlockSymbol()) {
+            if (position == RENPY_SYMBOL_POSITION.CHAIN_RIGHT) {
+                adjustHierarchyBy = 1;
+            } else if (position == RENPY_SYMBOL_POSITION.CHAIN_DOWN) {
+                adjustHierarchyBy = 0;
+            } else {
+                adjustHierarchyBy = -leftShiftBy;
+            }
         }
 
+        //remove the patch label from patchRPY, should be common for all 3 adds as it is  doing removal at patch side, no ops on source side
         renpySymbol patchChainParent = patchLabel.getCHAIN_PARENT_SYMBOL();
         patchChainParent.removeHIERARCHY_CHILD_SYMBOL(patchLabel);
-        renpySymbol afterDestinationLabel_symbol = end_symbol_of_label_to_be_added.getCHAIN_CHILD_SYMBOL();
-        patchChainParent.setCHAIN_CHILD_SYMBOL(afterDestinationLabel_symbol);
-        if (afterDestinationLabel_symbol != null)
-            afterDestinationLabel_symbol.setCHAIN_PARENT_SYMBOL(patchChainParent);
+        renpySymbol next_of_lastSymbolFromPatchLabel = lastSymbolFromPatchLabel.getCHAIN_CHILD_SYMBOL();
+        patchChainParent.setCHAIN_CHILD_SYMBOL(next_of_lastSymbolFromPatchLabel);
+        if (next_of_lastSymbolFromPatchLabel != null)
+            next_of_lastSymbolFromPatchLabel.setCHAIN_PARENT_SYMBOL(patchChainParent);
+        renpySymbol patchesHierarchyParent = patchLabel.getHIERARCHY_PARENT_SYMBOL();
+        patchesHierarchyParent.removeHIERARCHY_CHILD_SYMBOL(patchLabel);
 
-        renpySymbol destinationHierarchyParent = patchLabel.getHIERARCHY_PARENT_SYMBOL();
-        destinationHierarchyParent.removeHIERARCHY_CHILD_SYMBOL(patchLabel);
-
-        ArrayList<renpySymbol> childChainSymbols = patchLabel.getChainSymbols(patchLabel.getHIERARCHY_LEVEL(), false, true, true, true, patchLabel);
-        childChainSymbols.remove(patchLabel);//remove label symbol itself from its child-chain symbol list, as we pulled using includeSameHierarchy
-        makeLabelHierarchyStartFromZero(patchLabel, childChainSymbols);
-        patchLabel.setHIERARCHY_LEVEL(h + adjustHierarchyBy);
-        for (renpySymbol symbol : childChainSymbols) {
-            symbol.setHIERARCHY_LEVEL(symbol.getHIERARCHY_LEVEL() + h + adjustHierarchyBy);
+        //Operations on patch label's child symbols, like adjusting hierarchy, pathMatrix, for all 3 ops, same code if adjustHierarchyValue differs
+        ArrayList<renpySymbol> patchesChildChainSymbols = patchLabel.getChainSymbols(patchLabel.getHIERARCHY_LEVEL(), false, true, true, true, patchLabel);
+        patchesChildChainSymbols.remove(patchLabel);//remove label symbol itself from its child-chain symbol list, as we pulled using includeSameHierarchy
+        makeLabelHierarchyStartFromZero(patchLabel, patchesChildChainSymbols);
+        patchLabel.setHIERARCHY_LEVEL(sourceHierarchyLevel + adjustHierarchyBy);//5+1
+        for (renpySymbol symbol : patchesChildChainSymbols) {
+            symbol.setHIERARCHY_LEVEL(symbol.getHIERARCHY_LEVEL() + sourceHierarchyLevel + adjustHierarchyBy);//1+5+1
             if (symbol.getRenpySymbolType() == RENPY_SYMBOL_TYPE.RENPY_CALL) {
                 String labelName = ((renpyCall) symbol).getCallINTOLabelName();
                 ArrayList<renpySymbol> list = sourceParser.pathMatrix.get(labelName);
@@ -77,21 +86,42 @@ public class parserUtils {
             }
         }
 
-        source.setCHAIN_CHILD_SYMBOL(patchLabel);
-        patchLabel.setCHAIN_PARENT_SYMBOL(source);
+        //The real Magic, modifying sourceRpy
+        sourceRenpySymbol.setCHAIN_CHILD_SYMBOL(patchLabel);
+        patchLabel.setCHAIN_PARENT_SYMBOL(sourceRenpySymbol);
+        lastSymbolFromPatchLabel.setCHAIN_CHILD_SYMBOL(sourceChainChildSymbol);
+        if (sourceChainChildSymbol != null)
+            sourceChainChildSymbol.setCHAIN_PARENT_SYMBOL(lastSymbolFromPatchLabel);
 
-        end_symbol_of_label_to_be_added.setCHAIN_CHILD_SYMBOL(sourceNextChildSymbol);
-        if (sourceNextChildSymbol != null)
-            sourceNextChildSymbol.setCHAIN_PARENT_SYMBOL(end_symbol_of_label_to_be_added);
-        if (source.getRenpySymbolType() == RENPY_SYMBOL_TYPE.RENPY_LABEL) {
-            patchLabel.setHIERARCHY_PARENT_SYMBOL(source);
-            patchLabel.setCHAIN_PARENT_SYMBOL(end_symbol_of_label_to_be_added);
-            source.addHIERARCHY_CHILD_SYMBOL(patchLabel);
+        //Adjusting hierarchy dependencies of patch label in newRPY
+        if (position == RENPY_SYMBOL_POSITION.CHAIN_RIGHT) {
+            if (sourceRenpySymbol.isBlockSymbol()) {
+                //add our block inside sourceRenpySymbol
+                patchLabel.setHIERARCHY_PARENT_SYMBOL(sourceRenpySymbol);
+                sourceRenpySymbol.addHIERARCHY_CHILD_SYMBOL(patchLabel);
+            } else {
+                //add our block inside the parent of sourceRenpySymbol
+                renpySymbol HirrarchyParentOfSourceRenpySymbol = sourceRenpySymbol.getHIERARCHY_PARENT_SYMBOL();
+                patchLabel.setHIERARCHY_PARENT_SYMBOL(HirrarchyParentOfSourceRenpySymbol);
+                HirrarchyParentOfSourceRenpySymbol.addHIERARCHY_CHILD_SYMBOL(patchLabel);
+            }
+        } else if (position == RENPY_SYMBOL_POSITION.CHAIN_DOWN) {
+            //Irrespective of source symbol is block or non-block type, put it down, because it is down request
+            renpySymbol HirrarchyParentOfSourceRenpySymbol = sourceRenpySymbol.getHIERARCHY_PARENT_SYMBOL();
+            patchLabel.setHIERARCHY_PARENT_SYMBOL(HirrarchyParentOfSourceRenpySymbol);
+            HirrarchyParentOfSourceRenpySymbol.addHIERARCHY_CHILD_SYMBOL(patchLabel);
+        } else {//position==RENPY_SYMBOL_POSITION.LEFT
+            renpySymbol recurrsiveDetectedHirrarcyparet = sourceRenpySymbol;
+            for (int i = 0; i <= leftShiftBy; i++) {
+                recurrsiveDetectedHirrarcyparet = recurrsiveDetectedHirrarcyparet.getHIERARCHY_PARENT_SYMBOL();
+                if (recurrsiveDetectedHirrarcyparet == null) {
+                    throw new Exception("Oops somehow you went out of the rpy");
+                }
+            }
+            patchLabel.setHIERARCHY_PARENT_SYMBOL(recurrsiveDetectedHirrarcyparet);
+            recurrsiveDetectedHirrarcyparet.addHIERARCHY_CHILD_SYMBOL(patchLabel);
         }
     }
-
-    // TODO: 1/14/24 public static void addLabelAt(renpySymbol source,int position, parser sourceParser, renpyLabel patchLabel) {
-    // TODO: 1/14/24 public static void addLabelAtLeft(renpySymbol source, parser sourceParser, renpyLabel patchLabel) {
 
     private static void makeLabelHierarchyStartFromZero(renpyLabel label, ArrayList<renpySymbol> childChainSymbols) {
         int h = label.getHIERARCHY_LEVEL();
@@ -100,6 +130,9 @@ public class parserUtils {
         }
         label.setHIERARCHY_LEVEL(0);
     }
+
+    // TODO: 1/14/24 public static void addLabelAt(renpySymbol source,int position, parser sourceParser, renpyLabel patchLabel) {
+    // TODO: 1/14/24 public static void addLabelAtLeft(renpySymbol source, parser sourceParser, renpyLabel patchLabel) {
 
     /*
         Similar:

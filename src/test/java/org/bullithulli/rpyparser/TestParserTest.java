@@ -40,19 +40,6 @@ public class TestParserTest {
         assertEquals(rpyCode, renpyParser.parseLine(rpyCode, true, 2).getChainString(0, -1, true, true).trim());
     }
 
-
-    // TODO: 1/13/24 To be implemented
-    /*
-    public void parseTest3() throws renpyUnkownSymbolException {
-        String rpyCode = """
-                label car:
-                			label bike:
-                	xcxzcx z:
-                """;
-        parser renpyParser = new parser();
-        renpyParser.parseLine(rpyCode, true, 2);
-    }*/
-
     @Test
     public void parseTest2() {
         String rpyCode = """
@@ -87,7 +74,7 @@ public class TestParserTest {
         String rpyCode = """
                 screen tabletUI():
                     tag menu
-                    add "tabletmenu/tabletbg.png"     
+                    add "tabletmenu/tabletbg.png"
                     imagebutton:
                         xalign 0.44
                         yalign 0.2
@@ -104,7 +91,7 @@ public class TestParserTest {
                         yoffset 0
                         idle "tabletmenu/tbgstatsidle.png"
                         hover "tabletmenu/tbgstatshover.png"
-                        action ShowMenu ("StatsUI") 
+                        action ShowMenu ("StatsUI")
                 anwar "hello"
                     imagebutton: #<---this is wrong, parser should adjust to 0th hierarchy
                         xalign 0.54
@@ -115,7 +102,7 @@ public class TestParserTest {
                         hover "tabletmenu/tbgstatshover.png"
                         action ShowMenu ("StatsUI")
                         label z:
-                            car 
+                            car
                 """;
         String sol = """
                 screen tabletUI():
@@ -322,11 +309,11 @@ public class TestParserTest {
         renpyParser.parseLine(rpyCode, false, 4);
         assertEquals(1, renpyParser.pathMatrix.get("x").size());
         assertEquals(2, renpyParser.pathMatrix.get("y").size());
-        // TODO: 1/14/24 path matrix updation after adding and dleteinng albels
+        // TODO: 1/14/24 path matrix update after adding and deleting labels
     }
 
     @Test
-    public void test2() {
+    public void test2() throws Exception {
         String vanilla = """
                 label A:
                 	label B:
@@ -352,7 +339,7 @@ public class TestParserTest {
         renpyLabel A = (renpyLabel) B.getHIERARCHY_PARENT_SYMBOL();
 
         parserUtils.deleteInnerLabel(B, vanillaRenpyParser);
-        parserUtils.addLabelAfter(A, vanillaRenpyParser, patch1);
+        parserUtils.addLabelAfter(A, vanillaRenpyParser, patch1, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
 
         assertEquals("""
                 label A:
@@ -373,10 +360,27 @@ public class TestParserTest {
         renpyLabel E = (renpyLabel) F.getCHAIN_PARENT_SYMBOL();
         renpyLabel patch2 = iRoot.getInnerLabelByNameSearchRecursivly("patch2");
         parserUtils.deleteInnerLabel(F, vanillaRenpyParser);
-        parserUtils.addLabelAfter(E, vanillaRenpyParser, patch2);
-        //System.out.println(vRoot.getChainString(0, -1, true, true).trim());
+        parserUtils.addLabelAfter(E, vanillaRenpyParser, patch2, RENPY_SYMBOL_POSITION.CHAIN_RIGHT, 0);
+        assertEquals("""
+                label A:
+                	label patch1:
+                		anwar "Hello, mom"
+                	label C:
+                		label D:
+                			label E:
+                				label patch2:
+                					anwar "bye, mom"
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
         // TODO: 1/14/24 Wrong. need to fix
-        //System.out.println("---------------------");
-        //System.out.println(iRoot.getChainString(0, -1, true, true).trim());
+        assertEquals("", iRoot.getChainString(0, -1, true, true).trim());
     }
+    /*
+    label A:
+        label B:
+            label C:
+                label D:
+                    label patchedLabel1
+        label patchedLabel2
+     */
+    // TODO: 1/15/24 after adding or deleting nodes, check the innerLabels Order it should stay intact
 }

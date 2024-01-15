@@ -5,11 +5,9 @@ import org.bullithulli.rpyparser.symImpl.blockSymbols.renpyLabel;
 import org.bullithulli.rpyparser.symImpl.nonBlockSymbol.*;
 import org.bullithulli.rpyparser.symImpl.renpySymbol;
 import org.bullithulli.rpyparser.symImpl.rootSymbol;
-import org.bullithulli.utils.parserUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -54,7 +52,7 @@ public class parser {
     }*/
 
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
-        // TODO: 1/13/24 add init based initlization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
+        // TODO: 1/13/24 add init based initialization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
         String[] linesArray = lines.split("\n");
         for (String untrimmedLine : linesArray) {
             String trimmedLine = untrimmedLine.trim();
@@ -88,7 +86,7 @@ public class parser {
     }
 
     public renpySymbol parseFrom(File file, boolean basedOnTabCounts, int spaceSize) throws FileNotFoundException {
-        // TODO: 1/13/24 add init based initlization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
+        // TODO: 1/13/24 add init based initialization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
         Scanner sc = new Scanner(file);
         while (sc.hasNextLine()) {
             String untrimmedLine = sc.nextLine();
