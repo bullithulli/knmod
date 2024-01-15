@@ -734,4 +734,35 @@ public class TestParserUtilsTest {
                 """.trim(), vRoot.getChainString(0, -1, true, true).trim());
         assertEquals("", pRoot.getChainString(0, -1, true, true).trim());
     }
+
+    @Test
+    public void test16() throws Exception {
+        String vanillaCode = """
+                label A:
+                	end of A
+                label B:
+                	end of B
+                label C:
+                	end of C
+                """;
+        String patchRpyCode = """
+                label patch:
+                	anwar "hey, mom"
+                """;
+        parser vanillaParser = new parser();
+        parser patchParser = new parser();
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseLine(vanillaCode, true, 2);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseLine(patchRpyCode, true, 2);
+        renpyLabel B = vRoot.getInnerLabelByNameSearchRecursivly("B");
+        renpyLabel patch = pRoot.getInnerLabelByNameSearchRecursivly("patch");
+        parserUtils.replaceLabel(B, vanillaParser, patch, patchParser);
+        assertEquals("""
+                label A:
+                	end of A
+                label patch:
+                	anwar "hey, mom"
+                label C:
+                	end of C
+                """.trim(), vRoot.getChainString(0, -1, true, true).trim());
+    }
 }

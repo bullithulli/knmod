@@ -48,6 +48,10 @@ public class parserUtils {
             } else {
                 adjustHierarchyBy = -leftShiftBy;
             }
+        } else {
+            if (position == RENPY_SYMBOL_POSITION.CHAIN_LEFT) {
+                adjustHierarchyBy = -leftShiftBy;
+            }
         }
 
         //remove the patch label from patchRPY, should be common for all 3 adds as it is  doing removal at patch side, no ops on source side
