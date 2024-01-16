@@ -588,7 +588,7 @@ public class TestParserUtilsTest {
 
         parserUtils.writeChainString("/tmp/out", sourceRoot, 0, -1, true, true);
         String out = new String(Files.readAllBytes(Paths.get("/tmp/out")));
-        assertEquals(out.trim(), sourceRoot.getChainString(0, -1, true, true).trim());
+        assertEquals(out.trim(), sourceRoot.getChainString(0, -1, true, true).trim().replaceAll("\t", "    "));
     }
 
     @Test

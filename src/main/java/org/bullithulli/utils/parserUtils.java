@@ -144,6 +144,8 @@ public class parserUtils {
         getChainSymbols
         getChainString
         writeChainString
+
+        output is written as space indented than tabs. Renpy doesn't work with tab
      */
     public static void writeChainString(String filePath, renpySymbol start, int subtractIndents, int thresholdingLevel, boolean followLowerHierarchy, boolean includeSameHierarchy) throws IOException {
         renpySymbol current = start;
@@ -151,11 +153,11 @@ public class parserUtils {
         while (current != null) {
             if (includeSameHierarchy) {
                 if (current.getHIERARCHY_LEVEL() >= thresholdingLevel) {
-                    writer.write(getTabbedString(current.getHIERARCHY_LEVEL() - subtractIndents).concat(current.getRENPY_TRIMMED_LINE()).concat("\n"));
+                    writer.write(getTabbedString(current.getHIERARCHY_LEVEL() - subtractIndents).concat(current.getRENPY_TRIMMED_LINE()).concat("\n").replaceAll("\t", "    "));
                 }
             } else {
                 if (current.getHIERARCHY_LEVEL() > thresholdingLevel) {
-                    writer.write(getTabbedString(current.getHIERARCHY_LEVEL() - subtractIndents).concat(current.getRENPY_TRIMMED_LINE()).concat("\n"));
+                    writer.write(getTabbedString(current.getHIERARCHY_LEVEL() - subtractIndents).concat(current.getRENPY_TRIMMED_LINE()).concat("\n").replaceAll("\t", "    "));
                 }
             }
 
