@@ -32,7 +32,7 @@ public class modder2 {
     String inputFileForRequestedFeature = null;
     String outputFileForRequestedFeature = null;
     String lookupKey = null;
-    boolean indentTypeTAB = true;
+    boolean indentTypeTAB = false;
     int indentSize = 4;
     ArrayList<String> ListOfIgnoreLabels = new ArrayList<>();
     labelLookup lookupLabel;
@@ -83,7 +83,7 @@ public class modder2 {
         System.out.println("                            LABEL_REPLACE:   mandatory fields: --file --patchFrom --replaceBy; Optional fields: --outfile --indentType --indentSize");
         System.out.println("                                             --patchFrom=/path/toFile           A patch rpy file where you want to patch the source file");
         System.out.println("                                             --replaceBy=LIST[STR->STR]         A list of labels you want to patch, eg. --replaceBy=labelA->labelPatchA,labelB->labelPatchB. Defaults to []");
-        System.out.println("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to TAB");
+        System.out.println("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
         System.out.println("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
     }
 
