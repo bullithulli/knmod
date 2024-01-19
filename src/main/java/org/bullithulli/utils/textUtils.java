@@ -51,4 +51,24 @@ public class textUtils {
     public static String getTabbedString(int n) {
         return "\t".repeat(Math.max(0, n));
     }
+
+    public static String getUncommentedString(String trimmedStr) {
+        int k = -1;
+        if (trimmedStr.startsWith("#")) {
+            for (int i = 0; i < trimmedStr.length(); i++) {
+                char c = trimmedStr.charAt(i);
+                if ((c >= 'a' && c <= 'z') || c == '"' || c == '\'' || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
+                    k = i;
+                    break;
+                }
+            }
+        } else {
+            return trimmedStr;
+        }
+        if (k == -1) {
+            return "";
+        } else {
+            return trimmedStr.substring(k);
+        }
+    }
 }

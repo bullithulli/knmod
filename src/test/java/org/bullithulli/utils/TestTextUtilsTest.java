@@ -2,8 +2,7 @@ package org.bullithulli.utils;
 
 import org.junit.Test;
 
-import static org.bullithulli.utils.textUtils.countIndentations;
-import static org.bullithulli.utils.textUtils.countLeadingWhitespaces;
+import static org.bullithulli.utils.textUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class TestTextUtilsTest {
@@ -24,5 +23,17 @@ public class TestTextUtilsTest {
         assertEquals(countIndentations(4, false, 4), 1);
         assertEquals(countIndentations(4, false, 2), 2);
         assertEquals(countIndentations(8, false, 4), 2);
+    }
+
+    @Test
+    public void getUncommentedStringTest() {
+        assertEquals("$  mename = renpy.input(\"Какое твое имя? (Стандартное - 'Элис')\", exclude=\"[]{}\")", getUncommentedString("$  mename = renpy.input(\"Какое твое имя? (Стандартное - 'Элис')\", exclude=\"[]{}\")"));
+        assertEquals("old \"Self-voicing disabled.\"", getUncommentedString("old \"Self-voicing disabled.\""));
+        assertEquals("abcd", getUncommentedString("#abcd"));
+        assertEquals("abcd", getUncommentedString("#      abcd"));
+        assertEquals("\"abcd\"", getUncommentedString("#      \"abcd\""));
+        assertEquals("'abcd'", getUncommentedString("#      'abcd'"));
+        assertEquals("'abcd'", getUncommentedString("#    #######  'abcd'"));
+
     }
 }

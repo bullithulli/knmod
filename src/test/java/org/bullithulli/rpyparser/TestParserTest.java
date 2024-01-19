@@ -5,10 +5,15 @@ import org.bullithulli.rpyparser.symImpl.rootSymbol;
 import org.bullithulli.utils.parserUtils;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
@@ -374,13 +379,14 @@ public class TestParserTest {
         // TODO: 1/14/24 Wrong. need to fix
         assertEquals("", iRoot.getChainString(0, -1, true, true).trim());
     }
-    /*
-    label A:
-        label B:
-            label C:
-                label D:
-                    label patchedLabel1
-        label patchedLabel2
-     */
-    // TODO: 1/15/24 after adding or deleting nodes, check the innerLabels Order it should stay intact
+
+    @Test
+    public void createTranslationTableTest() throws URISyntaxException, FileNotFoundException {
+        URL fileURL = getClass().getClassLoader().getResource("parserTests/translate.rpy");
+        assert fileURL != null;
+        File file = new File(fileURL.toURI());
+        parser renpyparser = new parser();
+        HashMap<String, String> dict = renpyparser.createTranslationTable(file);
+        assertEquals(dict.size(), 6);
+    }
 }

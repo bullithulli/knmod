@@ -7,6 +7,7 @@ package org.bullithulli;
 import org.bullithulli.feature.knmod;
 import org.bullithulli.feature.labelLookup;
 import org.bullithulli.feature.labelReplacer;
+import org.bullithulli.feature.translateIt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,12 +16,13 @@ import static org.bullithulli.feature.labelLookup.*;
 
 
 public class modder2 {
-    public static final String version = "Jan-2024-alpha";
+    public static final String version = "Jan-2024-alpha0.2";
     public static final String eol = "\n";
     public static final String indent = "    ";
     public static String realArgs;
     public knmod knmod;
     boolean isKnMODFeatureRequested = false;
+    boolean isTranslateFeatureRequested = false;
     boolean isLabelLookUpFeatureRequested = false;
     boolean isLabelReplaceFeatureRequested = false;
     boolean removeFromSourceOnLabelHit = false;
@@ -32,6 +34,7 @@ public class modder2 {
     String inputFileForRequestedFeature = null;
     String outputFileForRequestedFeature = null;
     String lookupKey = null;
+    String tlFile = null;
     boolean indentTypeTAB = false;
     int indentSize = 4;
     ArrayList<String> ListOfIgnoreLabels = new ArrayList<>();
@@ -83,6 +86,10 @@ public class modder2 {
         System.out.println("                            LABEL_REPLACE:   mandatory fields: --file --patchFrom --replaceBy; Optional fields: --outfile --indentType --indentSize");
         System.out.println("                                             --patchFrom=/path/toFile           A patch rpy file where you want to patch the source file");
         System.out.println("                                             --replaceBy=LIST[STR->STR]         A list of labels you want to patch, eg. --replaceBy=labelA->labelPatchA,labelB->labelPatchB. Defaults to []");
+        System.out.println("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
+        System.out.println("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
+        System.out.println("                            TRANSLATE_RPY:   mandatory fields: --file --tlFile; Optional fields: --outfile --indentType --indentSize");
+        System.out.println("                                             --tlFile=/path/toFile              A translation rpy file where it contains translations");
         System.out.println("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
         System.out.println("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
     }
@@ -155,6 +162,28 @@ public class modder2 {
         new labelReplacer().replace(sourceFile, patchFile, destinationFile, listOfLabels, isTabIntended, spaceSize);
     }
 
+    public void verifyAndExecuteTranslateFeature(String sourceFile, String tlFile, String destinationFile, boolean isTabIntended, int spaceSize) throws Exception {
+        // TODO: 1/15/24 Write UnitTests
+        boolean forceExit = false;
+        if (sourceFile == null) {
+            System.err.println("You must pass --file parameter with TRANSLATE_RPY feature");
+            forceExit = true;
+        }
+        if (tlFile == null) {
+            System.err.println("You must pass --tlFile parameter with TRANSLATE_RPY feature");
+            forceExit = true;
+        }
+        if (forceExit) {
+            System.exit(2);
+        }
+
+        if (destinationFile == null) {
+            System.err.println("using default destination location of /tmp/out. or pass --outfile");
+            destinationFile = "/tmp/out";
+        }
+        new translateIt().generateTranslatedScript(sourceFile, tlFile, destinationFile, isTabIntended, spaceSize);
+    }
+
     public void executeArgs() throws Exception {
         if (isKnMODFeatureRequested) {
             verifyAndExecuteKNModFeature(inputFileForRequestedFeature, outputFileForRequestedFeature, skipLinesUpto);
@@ -162,6 +191,8 @@ public class modder2 {
             verifyAndExecuteLabelLookupFeature(lookupKey, inputFileForRequestedFeature, removeFromSourceOnLabelHit, stopLabelLookUpOnceNewLabelFound, stopOnNextLabelJump, followInnerJumps, followInnerCalls, followScreenCalls);
         } else if (isLabelReplaceFeatureRequested) {
             verifyAndExecuteLabelReplaceFeature(inputFileForRequestedFeature, patchFrom, outputFileForRequestedFeature, replaceBy, indentTypeTAB, indentSize);
+        } else if (isTranslateFeatureRequested) {
+            verifyAndExecuteTranslateFeature(inputFileForRequestedFeature, tlFile, outputFileForRequestedFeature, indentTypeTAB, indentSize);
         } else {
             System.err.println("No action performed. No feature selected");
         }
@@ -180,6 +211,7 @@ public class modder2 {
                     case "KNMOD" -> isKnMODFeatureRequested = true;
                     case "LABEL_LOOKUP" -> isLabelLookUpFeatureRequested = true;
                     case "LABEL_REPLACE" -> isLabelReplaceFeatureRequested = true;
+                    case "TRANSLATE_RPY" -> isTranslateFeatureRequested = true;
                     default -> System.err.println("Unknown Feature requested");
                 }
             } else if (arg.startsWith("--file=")) {
@@ -217,6 +249,8 @@ public class modder2 {
                 replaceBy = arg.substring("--replaceBy=".length());
             } else if (arg.startsWith("--patchFrom=")) {
                 patchFrom = arg.substring("--patchFrom=".length());
+            } else if (arg.startsWith("--tlFile=")) {
+                tlFile = arg.substring("--tlFile=".length());
             } else if (arg.startsWith("--indentType=")) {
                 switch (arg.substring("--indentType=".length()).toUpperCase()) {
                     case "TAB" -> indentTypeTAB = true;

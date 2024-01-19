@@ -12,11 +12,11 @@ public class labelReplacer {
         // TODO: 1/15/24 Write UnitTests 
         parser vanillaParser = new parser();
         File vanillaFile = new File(vanillaFilePath);
-        rootSymbol vRoot = (rootSymbol) vanillaParser.parseFrom(vanillaFile, isTabIndented, spaceSize);
+        rootSymbol vRoot = (rootSymbol) vanillaParser.parseFrom(vanillaFile, isTabIndented, spaceSize, false, null);
 
         File patchFile = new File(patchFilePath);
         parser patchParser = new parser();
-        rootSymbol pRoot = (rootSymbol) patchParser.parseFrom(patchFile, isTabIndented, spaceSize);
+        rootSymbol pRoot = (rootSymbol) patchParser.parseFrom(patchFile, isTabIndented, spaceSize, false, null);
         //parserUtils.writeChainString(destinationFile, vRoot, 0, -1, true, true);
         String[] labelList = listOfLabels.split(",");
         for (String labelMapping : labelList) {
@@ -28,7 +28,7 @@ public class labelReplacer {
                     System.err.printf("PatchLabel [%s] couldn't not be found in patchFile%n", labels[1]);
                 }
                 if (sourceLabel == null) {
-                    System.err.printf("SourceLabel [%s] couldn't not be found in patchFile%n", labels[0]);
+                    System.err.printf("SourceLabel [%s] couldn't not be found in sourceFile%n", labels[0]);
                 }
                 System.err.println("failed to patch");
                 System.exit(1);

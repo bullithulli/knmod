@@ -14,25 +14,56 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.*;
-import static org.bullithulli.utils.textUtils.countIndentations;
-import static org.bullithulli.utils.textUtils.countLeadingWhitespaces;
+import static org.bullithulli.utils.textUtils.*;
 
 public class parser {
-    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.$\\-\"'’\\?][a-zA-Z0-9_,\\<\\>.…&+\\-=\"(\\)\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*[:|\\{]";
+    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.$\\-\"'’\\?][a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*[:|{]\\s*(?:#.*)?$";
     final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
+    final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z\\s]+\\\".+\".*";
+    final String regex_get_between_doubleQuotes = "\".*\"";
     /**
      * This will store path matrix, like
      * labelName,ArrayListOfSymbol who will call or jumps
      */
     public HashMap<String, ArrayList<renpySymbol>> pathMatrix = new HashMap<>();
-    rootSymbol root = new rootSymbol(ROOT_FILE, "\n");
+    rootSymbol root = new rootSymbol(ROOT_LABEL, "\n");
     int CURRENT_HIERARCHY = 0;
     renpySymbol previousHierarchyParent = root;
     renpySymbol previousChainParent = root;
     Pattern pattern_for_speaker_text = Pattern.compile(regex_detect_for_speak_text);
     Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
     Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
+    Pattern pattern_for_tl_original_line = Pattern.compile(regex_detect_tl_originalLine);
+    Pattern pattern_get_between_doubleQuotes = Pattern.compile(regex_get_between_doubleQuotes);
+
+    public HashMap<String, String> createTranslationTable(File fromFile) throws FileNotFoundException {
+        HashMap<String, String> translationMap = new HashMap<>();
+        Scanner sc = new Scanner(fromFile);
+        boolean keyFound = true;
+        String key = null;
+        while (sc.hasNextLine()) {
+            String untrimmedLine = sc.nextLine();
+            String trimmedLine = untrimmedLine.trim();
+            if (trimmedLine.isEmpty()) {
+                continue;
+            }
+
+            if (pattern_for_tl_original_line.matcher(trimmedLine).find()) {
+                keyFound = true;
+                key = getUncommentedString(trimmedLine);
+            } else if (pattern_for_speaker_text.matcher(trimmedLine).find() && keyFound) {
+                if (key.startsWith("old \"")) {//block symbol trnaslation
+                    translationMap.put(key.replaceFirst("old \"", "\""), getUncommentedString(trimmedLine).replaceFirst("new \"", "\""));
+                } else {
+                    translationMap.put(key, getUncommentedString(trimmedLine));
+                }
+                keyFound = false;
+            }
+        }
+        sc.close();
+        return translationMap;
+    }
 
 
     public renpySymbol parseLine(String lines, boolean basedOnTabCounts, int spaceSize) {
@@ -69,7 +100,11 @@ public class parser {
         return root;
     }
 
-    public renpySymbol parseFrom(File file, boolean basedOnTabCounts, int spaceSize) throws FileNotFoundException {
+    public renpySymbol parseFrom(File file, boolean basedOnTabCounts, int spaceSize, boolean requiredTranslate, File tl_file) throws FileNotFoundException {
+        HashMap<String, String> translationTable = null;
+        if (requiredTranslate) {
+            translationTable = createTranslationTable(tl_file);
+        }
         // TODO: 1/13/24 add init based initialization for GlobalVariables, so multiple calls on parseLine will not affect rootSymbol
         Scanner sc = new Scanner(file);
         while (sc.hasNextLine()) {
@@ -80,12 +115,22 @@ public class parser {
             }
             String symbol = trimmedLine.split("\\s+")[0];
             if (pattern_for_block_symbols.matcher(untrimmedLine).find()) {
+                if (requiredTranslate && trimmedLine.charAt(0) == '"') {//no speakertext block, like--> menu: "car":
+                    int end = trimmedLine.lastIndexOf(':');//todo handle commnets
+                    String temp = trimmedLine.substring(0, end);
+                    untrimmedLine = untrimmedLine.replace(temp, translationTable.getOrDefault(temp, temp));
+                    trimmedLine = untrimmedLine.trim();
+                }
                 if (symbol.startsWith("label")) {
                     sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_LABEL);
                 } else {
                     sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_GENERIC_BLOCK_SYMBOLS);
                 }
             } else {
+                if (requiredTranslate) {
+                    untrimmedLine = untrimmedLine.replace(trimmedLine, translationTable.getOrDefault(trimmedLine, trimmedLine));
+                    trimmedLine = untrimmedLine.trim();
+                }
                 if (pattern_for_speaker_text.matcher(trimmedLine).find()) {
                     nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_SPEAKER_TEXT);
                 } else if (pattern_for_no_speaker_texts.matcher(trimmedLine).find()) {
