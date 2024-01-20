@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.bullithulli.rpyparser.RENPY_SYMBOL_TYPE.*;
@@ -20,7 +21,7 @@ public class parser {
     final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.$\\-\"'’\\?][a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*[:|{]\\s*(?:#.*)?$";
     final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
-    final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z\\s]+\\\".+\".*";
+    final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]+\\\".+\".*";
     final String regex_get_between_doubleQuotes = "\".*\"";
     /**
      * This will store path matrix, like
@@ -40,8 +41,8 @@ public class parser {
     public HashMap<String, String> createTranslationTable(File fromFile) throws FileNotFoundException {
         HashMap<String, String> translationMap = new HashMap<>();
         Scanner sc = new Scanner(fromFile);
-        boolean keyFound = true;
-        String key = null;
+        boolean keyFound = false;
+        String key = null, value = null;
         while (sc.hasNextLine()) {
             String untrimmedLine = sc.nextLine();
             String trimmedLine = untrimmedLine.trim();
@@ -51,12 +52,17 @@ public class parser {
 
             if (pattern_for_tl_original_line.matcher(trimmedLine).find()) {
                 keyFound = true;
-                key = getUncommentedString(trimmedLine);
+                Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
+                if (m.find()) {
+                    String underDoubleQuotes = m.group();
+                    key = getUncommentedString(underDoubleQuotes);
+                }
             } else if (pattern_for_speaker_text.matcher(trimmedLine).find() && keyFound) {
-                if (key.startsWith("old \"")) {//block symbol trnaslation
-                    translationMap.put(key.replaceFirst("old \"", "\""), getUncommentedString(trimmedLine).replaceFirst("new \"", "\""));
-                } else {
-                    translationMap.put(key, getUncommentedString(trimmedLine));
+                Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
+                if (m.find()) {
+                    String underDoubleQuotes = m.group();
+                    value = getUncommentedString(underDoubleQuotes);
+                    translationMap.put(key, value);
                 }
                 keyFound = false;
             }
@@ -113,24 +119,24 @@ public class parser {
             if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
                 continue;//skip new lines, empty lines
             }
-            String symbol = trimmedLine.split("\\s+")[0];
-            if (pattern_for_block_symbols.matcher(untrimmedLine).find()) {
-                if (requiredTranslate && trimmedLine.charAt(0) == '"') {//no speakertext block, like--> menu: "car":
-                    int end = trimmedLine.lastIndexOf(':');//todo handle commnets
-                    String temp = trimmedLine.substring(0, end);
-                    untrimmedLine = untrimmedLine.replace(temp, translationTable.getOrDefault(temp, temp));
+
+            if (requiredTranslate) {
+                Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
+                if (m.find()) {
+                    String underDoubleQuotes = m.group();
+                    untrimmedLine = untrimmedLine.replace(underDoubleQuotes, translationTable.getOrDefault(underDoubleQuotes, underDoubleQuotes));
                     trimmedLine = untrimmedLine.trim();
                 }
+            }
+
+            String symbol = trimmedLine.split("\\s+")[0];
+            if (pattern_for_block_symbols.matcher(untrimmedLine).find()) {
                 if (symbol.startsWith("label")) {
                     sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_LABEL);
                 } else {
                     sectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_GENERIC_BLOCK_SYMBOLS);
                 }
             } else {
-                if (requiredTranslate) {
-                    untrimmedLine = untrimmedLine.replace(trimmedLine, translationTable.getOrDefault(trimmedLine, trimmedLine));
-                    trimmedLine = untrimmedLine.trim();
-                }
                 if (pattern_for_speaker_text.matcher(trimmedLine).find()) {
                     nonSectionSymbolsParserHelper(untrimmedLine, basedOnTabCounts, spaceSize, RENPY_SPEAKER_TEXT);
                 } else if (pattern_for_no_speaker_texts.matcher(trimmedLine).find()) {
