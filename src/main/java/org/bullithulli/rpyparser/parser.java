@@ -54,13 +54,13 @@ public class parser {
                 keyFound = true;
                 Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
                 if (m.find()) {
-                    String underDoubleQuotes = m.group();
+                    String underDoubleQuotes = m.group().trim();
                     key = getUncommentedString(underDoubleQuotes);
                 }
-            } else if (pattern_for_speaker_text.matcher(trimmedLine).find() && keyFound) {
+            } else if ((pattern_for_speaker_text.matcher(trimmedLine).find() || pattern_for_no_speaker_texts.matcher(trimmedLine).find()) && keyFound) {
                 Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
                 if (m.find()) {
-                    String underDoubleQuotes = m.group();
+                    String underDoubleQuotes = m.group().trim();
                     value = getUncommentedString(underDoubleQuotes);
                     translationMap.put(key, value);
                 }
@@ -123,7 +123,7 @@ public class parser {
             if (requiredTranslate) {
                 Matcher m = pattern_get_between_doubleQuotes.matcher(trimmedLine);
                 if (m.find()) {
-                    String underDoubleQuotes = m.group();
+                    String underDoubleQuotes = m.group().trim();
                     untrimmedLine = untrimmedLine.replace(underDoubleQuotes, translationTable.getOrDefault(underDoubleQuotes, underDoubleQuotes));
                     trimmedLine = untrimmedLine.trim();
                 }
