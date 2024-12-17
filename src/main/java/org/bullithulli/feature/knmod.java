@@ -175,6 +175,8 @@ public class knmod {
         //A file is processed here, add some signatures
         writeLineToDisk(knmodSay("ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/", silenceKNMOD_for), fw);
         writeLineToDisk(knmodSay("modded by modder2 " + version + " program. Created by BulliThulli", silenceKNMOD_for), fw);
+        writeLineToDisk("python:\n" +
+                "    renpy.input(\"Ignore this box. It is just added by me to verify if you reached the end of the game\", length=32)", fw);
         fw.close();
     }
 }

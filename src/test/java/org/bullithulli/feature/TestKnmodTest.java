@@ -30,6 +30,8 @@ public class TestKnmodTest {
                 World
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
@@ -56,6 +58,8 @@ public class TestKnmodTest {
                 World
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
@@ -80,6 +84,8 @@ public class TestKnmodTest {
                 KN_MOD "jump E4_Apurna"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/f.rpy")).getPath();
@@ -101,6 +107,8 @@ public class TestKnmodTest {
                 world
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/g.rpy")).getPath();
@@ -125,6 +133,8 @@ public class TestKnmodTest {
                 u "Do you think they're reviewing the Apes?"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/b.rpy")).getPath();
@@ -147,6 +157,8 @@ public class TestKnmodTest {
                 KN_MOD "Give me that:"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/c.rpy")).getPath();
@@ -188,6 +200,8 @@ public class TestKnmodTest {
                 KN_MOD "return#dsaasd"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/returntest.rpy")).getPath();
@@ -218,6 +232,8 @@ public class TestKnmodTest {
                         linear 5.0 alpha 1.0
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipImageTest.rpy")).getPath();
@@ -250,6 +266,8 @@ public class TestKnmodTest {
                 anwar "hehllo"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipSectionAndLabel.rpy")).getPath();
@@ -275,6 +293,8 @@ public class TestKnmodTest {
                 anwar "hello"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
+                python:
+                    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
                 """, version, version);
         modder2 modder2 = new modder2();
         modder2.knmod.silenceKNMOD_for.addAll(Arrays.asList("call phone_start,call message_start,call reply_message,call message".split(",")));
