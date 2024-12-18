@@ -1,6 +1,5 @@
-import networkx as nx
 import matplotlib.pyplot as plt
-import pygraphviz
+import networkx as nx
 
 # Create a directed graph
 G = nx.DiGraph()
@@ -9,13 +8,15 @@ G = nx.DiGraph()
 G.add_nodes_from(["Start", "Process1", "Decision", "Process2", "End"])
 
 # Add edges
-G.add_edges_from([("Start", "Process1"), ("Process1", "Decision"), ("Decision", "Process2", {"label": "Yes"}), ("Decision", "End", {"label": "No"})])
+G.add_edges_from([("Start", "Process1"), ("Process1", "Decision"), ("Decision", "Process2", {"label": "Yes"}),
+                  ("Decision", "End", {"label": "No"})])
 
 # Hierarchical layout assignment
 pos = nx.nx_agraph.graphviz_layout(G, prog="dot")
 
 # Draw the graph
-nx.draw(G, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=8, font_color="black", font_weight="bold", arrowsize=20)
+nx.draw(G, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=8, font_color="black",
+        font_weight="bold", arrowsize=20)
 
 # Add edge labels
 edge_labels = nx.get_edge_attributes(G, 'label')

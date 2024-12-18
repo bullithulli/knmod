@@ -1,16 +1,12 @@
 package org.bullithulli.utils;
 
-import java.util.ArrayList;
-
-import static org.bullithulli.utils.textUtils.*;
+import static org.bullithulli.utils.textUtils.removeBrackets;
+import static org.bullithulli.utils.textUtils.removeFlowerBrackets;
+import static org.bullithulli.utils.textUtils.removeQuotesFromLine;
+import static org.bullithulli.utils.textUtils.removeSquareBrackets;
 
 public class modUtils {
-    public static String knmodSay(String trimmed_line, ArrayList<String> silenceKNMOD_for) {
-        for (String item : silenceKNMOD_for) {
-            if (trimmed_line.startsWith(item)) {
-                return trimmed_line;
-            }
-        }
-        return "KN_MOD " + "\"" + removeSquareBrackets(removeFlowerBrackets(removeBrackets(removeQuotesFromLine(trimmed_line)))) + "\"";
-    }
+	public static String knmodSay(String trimmed_line) {
+		return "KN_MOD " + "\"" + removeSquareBrackets(removeFlowerBrackets(removeBrackets(removeQuotesFromLine(trimmed_line)))) + "\"";
+	}
 }

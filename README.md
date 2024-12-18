@@ -1,8 +1,11 @@
-# Getting Started 
+# Getting Started
+
 ### Prerequisites to build on your own:
+
 Linux(or Windows), Java17-jdk, Java17-jre, Maven, dos2unix
 
 Download the project and build the project
+
 ```diff
 git clone https://github.com/bullithulli/knmod
 cd knmod
@@ -10,7 +13,9 @@ mvn clean install
 ```
 
 ### Basic Usage
+
 Either build on your own or download from the release Page
+
 ```
 # for knmod
 cd target/
@@ -22,7 +27,9 @@ java -jar modder-2.jar  --feature=LABEL_REPLACE --file=/tmp/script.rpy --indentT
 
 
 ```
+
 Advanced features:
+
 ```
 No command-line arguments provided.
 Usage: java -jar modder-2.jar [OPTIONS]
@@ -52,4 +59,6 @@ Options:
                                              --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space
                                              --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4
 ```
-Alternatively, you can  watch these [videos](https://drive.google.com/drive/folders/1Hv6X9Uq4Av-iW701AJxpQCF5JPllnUPi?usp=sharing) to get started
+
+Alternatively, you can watch
+these [videos](https://drive.google.com/drive/folders/1Hv6X9Uq4Av-iW701AJxpQCF5JPllnUPi?usp=sharing) to get started
