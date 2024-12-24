@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static org.bullithulli.modder2.displayHelp;
+import static org.bullithulli.Modder2.displayHelp;
 
 public class TestModder {
 	@Test

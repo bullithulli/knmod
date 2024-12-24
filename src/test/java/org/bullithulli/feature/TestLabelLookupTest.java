@@ -1,6 +1,6 @@
 package org.bullithulli.feature;
 
-import org.bullithulli.modder2;
+import org.bullithulli.Modder2;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class TestLabelLookupTest {
 				    return
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir1/")).getPath();
 		modder2.verifyAndExecuteLabelLookupFeature("five", absolutePath, false, true, false, true, true, false);
@@ -50,7 +50,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_LABELS_FOUND  [label three:]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 
 		modder2.verifyAndExecuteLabelLookupFeature("one", absolutePathDir1, false, false, true, true, true, false);
@@ -65,7 +65,7 @@ public class TestLabelLookupTest {
 				label one:
 				    one
 				""";
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir1/")).getPath();
 		modder2.verifyAndExecuteLabelLookupFeature("one", absolutePath, false, true, false, true, true, false);
@@ -87,7 +87,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_LABELS_FOUND  [label three:]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("one", absolutePathDir1, false, false, false, true, true, false);
 		enableSysOuts();
@@ -115,7 +115,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_LABELS_FOUND  [label three:]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("ten", absolutePathDir1, false, false, false, true, true, false);
 		enableSysOuts();
@@ -136,7 +136,7 @@ public class TestLabelLookupTest {
 				    one
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("ten", absolutePathDir1, false, true, false, true, true, false);
 		enableSysOuts();
@@ -152,7 +152,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      JUMPS_FOUND  [jump twelve]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("ten", absolutePathDir1, false, true, false, false, true, false);
 		enableSysOuts();
@@ -180,7 +180,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_LABELS_FOUND  [label three:]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("ten", absolutePathDir1, false, false, true, true, true, false);
 		enableSysOuts();
@@ -224,7 +224,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      JUMPS_FOUND  [jump one]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("seventeen", absolutePathDir1, false, false, true, true, true, false);
 		enableSysOuts();
@@ -261,7 +261,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_CALLS_FOUND  [call ten]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("seventeen", absolutePathDir1, false, false, true, true, false, false);
 		enableSysOuts();
@@ -282,7 +282,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      JUMPS_FOUND  [jump eight]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("seventeen", absolutePathDir1, false, false, true, false, false, false);
 		enableSysOuts();
@@ -316,7 +316,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      JUMPS_FOUND  [jump twelve]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("a1", absolutePathDir1, false, false, true, false, true, false);
 		enableSysOuts();
@@ -353,7 +353,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      JUMPS_FOUND  [jump one]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("a1", absolutePathDir1, false, false, true, true, true, false);
 		enableSysOuts();
@@ -386,7 +386,7 @@ public class TestLabelLookupTest {
 				BULLITULLI-MODDER2: -----------------------------------      INNER_LABELS_FOUND  [label car:]   -----------------------------------
 				""";
 
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		disableSysOuts();
 		modder2.verifyAndExecuteLabelLookupFeature("test1", absolutePathDir3, false, false, true, true, true, true);
 		enableSysOuts();

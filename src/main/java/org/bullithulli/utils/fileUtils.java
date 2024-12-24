@@ -2,7 +2,7 @@ package org.bullithulli.utils;
 
 import java.io.FileWriter;
 
-import static org.bullithulli.modder2.eol;
+import static org.bullithulli.Modder2.eol;
 
 public class fileUtils {
 	public static void writeLineToDisk(String str, FileWriter fw) throws Exception {

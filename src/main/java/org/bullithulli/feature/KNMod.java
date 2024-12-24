@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.bullithulli.modder2.realArgs;
-import static org.bullithulli.modder2.version;
+import static org.bullithulli.Modder2.realArgs;
+import static org.bullithulli.Modder2.version;
 import static org.bullithulli.utils.fileUtils.writeLineToDisk;
 import static org.bullithulli.utils.modUtils.knmodSay;
 
 @Slf4j
 public class KNMod {
 	protected static final List<String> retianBlock = new ArrayList<>(); //list of blocks where KNMOD doesnt apply to it
-	public static final List<String> forceKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
+	public static final List<String> forceKNModForStartsWith = new ArrayList<>();//list of blocks where KN MOD forces it
 	public final List<String> forceDontKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
 	public final List<String> forceDontKNModFor = new ArrayList<>();//list of words where KNMOD forces it, eaxt words
 	private static final char[] REMOVE_CHARACTERS = {'"', '\'', '[', ']', '{', '(', ')'}; // Characters to remove
@@ -31,7 +31,7 @@ public class KNMod {
 	public KNMod() {
 		retianBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform")); //you dont want to KNMOD show block
 		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "(("));
-		forceDontKNModForStartsWith.addAll(Arrays.asList("label start"));
+		forceDontKNModForStartsWith.add("label start");
 		forceDontKNModFor.addAll(Arrays.asList("or", "and"));
 	}
 
@@ -103,17 +103,17 @@ public class KNMod {
 	 * Recursively processes the symbol hierarchy and writes transformed content into the output file.
 	 *
 	 * @param symbol         Current `renpySymbol` being processed.
-	 * @param skippableLines Number of lines to skip initially.
+	 * @param skipableLines Number of lines to skip initially.
 	 * @return The updated number of processed lines.
 	 */
-	private String processSymbolHierarchy(renpySymbol symbol, String skippableLines) {
+	private String processSymbolHierarchy(renpySymbol symbol, String skipableLines) {
 		renpySymbol currentPointedsymbol = symbol;
 		boolean doKnmod = false;
-		boolean startModding = skippableLines == null;
+		boolean startModding = skipableLines == null;
 		while (currentPointedsymbol.getCHAIN_CHILD_SYMBOL() != null) {
 			currentPointedsymbol = currentPointedsymbol.getCHAIN_CHILD_SYMBOL();
 			if (!startModding) {
-				if (currentPointedsymbol.getRENPY_TRIMMED_LINE().startsWith(skippableLines)) {
+				if (currentPointedsymbol.getRENPY_TRIMMED_LINE().startsWith(skipableLines)) {
 					startModding = true;
 				} else {
 					continue;

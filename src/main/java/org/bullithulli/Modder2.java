@@ -10,7 +10,6 @@ import org.bullithulli.feature.labelLookup;
 import org.bullithulli.feature.labelReplacer;
 import org.bullithulli.feature.translateIt;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.bullithulli.feature.labelLookup.FOUND_HIT;
@@ -18,7 +17,7 @@ import static org.bullithulli.feature.labelLookup.ROOT_SEARCH_DIR;
 import static org.bullithulli.feature.labelLookup.modderSay;
 
 @Slf4j
-public class modder2 {
+public class Modder2 {
 	public static final String version = "Jan-2025-alpha0.1";
 	public static final String eol = "\n";
 	public static String realArgs;
@@ -32,20 +31,19 @@ public class modder2 {
 	boolean stopOnNextLabelJump = false;
 	boolean followInnerJumps = false;
 	boolean followInnerCalls = false;
-	String  startModFromSymbol = null;
+	String startModFromSymbol = null;
 	String inputFileForRequestedFeature = null;
 	String outputFileForRequestedFeature = null;
 	String lookupKey = null;
 	String tlFile = null;
 	boolean indentTypeTAB = false;
 	int indentSize = 4;
-	ArrayList<String> ListOfIgnoreLabels = new ArrayList<>();
 	labelLookup lookupLabel;
 	boolean followScreenCalls = false;
 	String patchFrom = null;
 	String replaceBy = null;
 
-	public modder2() {
+	public Modder2() {
 		KNmod = new KNMod();
 		lookupLabel = new labelLookup();
 	}
@@ -58,9 +56,9 @@ public class modder2 {
 			displayHelp();
 			System.exit(2);
 		}
-		modder2 modder = new modder2();
-		modder.verifyArgs(args);
-		modder.executeArgs();
+		Modder2 moder = new Modder2();
+		moder.verifyArgs(args);
+		moder.executeArgs();
 	}
 
 	public static void displayHelp() {
@@ -71,9 +69,11 @@ public class modder2 {
 		log.info("  --file=FILENAME           Specify a file");
 		log.info("  --outfile=FILENAME        Destination output. Defaults to /tmp/out");
 		log.info("  --feature=FEATURE_NAME    The Feature you want to use. Available, KNMOD,LABEL_LOOKUP, LABEL_REPLACE");
-		log.info("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --startModFromSymbol");
-		log.info("                                            --startModFromSymbol=String                     Don't process the lines till it starts with this symbol. Defaults to null");
-		log.info("                            LABEL_LOOKUP:   mandatory fields: --file --key; Optional fields: --removefromsource --stopOnNewlabel --stopOnNextLabelJump --followInnerJumps --followInnerCalls --ignoreLabels --followScreenCalls");
+		log.info("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --forceDontKNModForStartsWith --forceKNModForStartsWith");
+		log.info("                                            --startModFromSymbol=String         Don't process the lines till it starts with this symbol. Defaults to null");
+		log.info("                                            --forceDontKNModForStartsWith=String               Don't KNMOD the symbols. Defaults to null");
+		log.info("                                            --forceKNModForStartsWith=String                   did you find new symbols that need to be KNMODed. Add them here");
+		log.info("                            LABEL_LOOKUP:   mandatory fields: --file --key; Optional fields: --removefromsource --stopOnNewlabel --stopOnNextLabelJump --followInnerJumps --followInnerCalls  --followScreenCalls");
 		log.info("                                            --key=STRING                        Label to Lookup");
 		log.info("                                            --removefromsource=BOOLEAN          Erase label definition in source file if matches. Defaults to false");
 		log.info("                                            --stopOnNewlabel=BOOLEAN            Stop lookup label once new label is found. Defaults to true");
@@ -218,9 +218,7 @@ public class modder2 {
 			} else if (arg.startsWith("--outfile=")) {
 				outputFileForRequestedFeature = arg.substring("--outfile=".length());
 			} else if (arg.startsWith("--startModFromSymbol=")) {
-				String temp = arg.substring("--startModFromSymbol=".length());
-				log.error("startModFromSymbol ->>>>>>>>>>>>>{}", temp);
-				startModFromSymbol =temp;
+				startModFromSymbol = arg.substring("--startModFromSymbol=".length());
 			} else if (arg.startsWith("--key=")) {
 				lookupKey = arg.substring("--key=".length());
 			} else if (arg.startsWith("--removefromsource=")) {
@@ -233,12 +231,10 @@ public class modder2 {
 				followInnerJumps = Boolean.parseBoolean(arg.substring("--followInnerJumps=".length()));
 			} else if (arg.startsWith("--followInnerCalls=")) {
 				followInnerCalls = Boolean.parseBoolean(arg.substring("--followInnerCalls=".length()));
-			} else if (arg.startsWith("--ignoreLabels=")) {
-				ListOfIgnoreLabels.addAll(Arrays.asList(arg.substring("--ignoreLabels=".length()).split(",")));
-			} else if (arg.startsWith("--ignoreLines=")) {
-				KNMod.forceKNModForStartsWith.addAll(Arrays.asList(arg.substring("--ignoreLines=".length()).split(",")));
-			} else if (arg.startsWith("--silenceKNMOD_for=")) {
-//				knmod.silenceKNMOD_for.addAll(Arrays.asList(arg.substring("--silenceKNMOD_for=".length()).split(",")));
+			} else if (arg.startsWith("--forceKNModForStartsWith=")) {
+				KNMod.forceKNModForStartsWith.addAll(Arrays.asList(arg.substring("--forceKNModForStartsWith=".length()).split(",")));
+			} else if (arg.startsWith("--forceDontKNModForStartsWith=")) {
+				KNmod.forceDontKNModForStartsWith.addAll(Arrays.asList(arg.substring("--forceDontKNModForStartsWith=".length()).split(",")));
 			} else if (arg.startsWith("--followScreenCalls=")) {
 				followScreenCalls = Boolean.parseBoolean(arg.substring("--followScreenCalls=".length()));
 			} else if (arg.startsWith("--indentSize=")) {

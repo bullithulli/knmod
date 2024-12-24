@@ -1,6 +1,6 @@
 package org.bullithulli.feature;
 
-import org.bullithulli.modder2;
+import org.bullithulli.Modder2;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.bullithulli.modder2.version;
+import static org.bullithulli.Modder2.version;
 
 public class TestKnmodTest {
 	@Test
@@ -32,7 +32,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -60,7 +60,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/d.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -86,7 +86,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/f.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -109,7 +109,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/g.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -135,7 +135,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/b.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -159,7 +159,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/c.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -181,7 +181,7 @@ public class TestKnmodTest {
 				KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
 				KN_MOD "modded by modder2 %s program. Created by BulliThulli"
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/a.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -202,7 +202,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/returntest.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -234,7 +234,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipImageTest.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -268,7 +268,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/skipSectionAndLabel.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
@@ -295,7 +295,7 @@ public class TestKnmodTest {
 				python:
 				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		modder2.KNmod.forceDontKNModForStartsWith.add("call");
 		
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/ingoreKNtest.rpy")).getPath();
@@ -339,7 +339,7 @@ public class TestKnmodTest {
 				python:
 				\trenpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/a.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out"))).replaceAll("    ", "\t");
@@ -368,7 +368,7 @@ public class TestKnmodTest {
 				python:
 				\trenpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/b.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out"))).replaceAll("    ", "\t");
@@ -397,7 +397,7 @@ public class TestKnmodTest {
 				python:
 				\trenpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/c.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out"))).replaceAll("    ", "\t");
@@ -450,7 +450,7 @@ public class TestKnmodTest {
 				python:
 				\trenpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
 				""", version, version);
-		modder2 modder2 = new modder2();
+		Modder2 modder2 = new Modder2();
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/h.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out"))).replaceAll("    ", "\t");
