@@ -297,7 +297,7 @@ public class TestKnmodTest {
 				""", version, version);
 		Modder2 modder2 = new Modder2();
 		modder2.KNmod.forceDontKNModForStartsWith.add("call");
-		
+
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/ingoreKNtest.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));

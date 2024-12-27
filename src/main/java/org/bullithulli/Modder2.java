@@ -50,12 +50,27 @@ public class Modder2 {
 
 
 	public static void main(String[] args) throws Exception {
-		realArgs = String.join(" ", args);
+		realArgs = Arrays.stream(args)
+				.map(arg -> {
+					if (arg.startsWith("--")) {
+						// Split the argument into key and value
+						String[] keyValue = arg.split("=", 2);
+						if (keyValue.length == 2 && keyValue[1].contains(" ")) {
+							// If value contains spaces, wrap it in double quotes
+							return keyValue[0] + "=\"" + keyValue[1] + "\"";
+						}
+						return arg; // Return the original argument if no modification is needed
+					}
+					return arg; // Return non-`--` arguments as-is
+				})
+				.reduce((a, b) -> a + " " + b) // Join arguments with spaces
+				.orElse("").trim();
 		if (args.length == 0) {
 			log.info("No command-line arguments provided.");
 			displayHelp();
 			System.exit(2);
 		}
+
 		Modder2 moder = new Modder2();
 		moder.verifyArgs(args);
 		moder.executeArgs();

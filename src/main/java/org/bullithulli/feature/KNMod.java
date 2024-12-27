@@ -21,16 +21,15 @@ import static org.bullithulli.utils.modUtils.knmodSay;
 
 @Slf4j
 public class KNMod {
-	protected static final List<String> retianBlock = new ArrayList<>(); //list of blocks where KNMOD doesnt apply to it
 	public static final List<String> forceKNModForStartsWith = new ArrayList<>();//list of blocks where KN MOD forces it
-	public final List<String> forceDontKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
-	public final List<String> forceDontKNModFor = new ArrayList<>();//list of words where KNMOD forces it, eaxt words
+	protected static final List<String> retainBlock = new ArrayList<>(); //list of blocks where KNMOD doesnt apply to it
 	private static final char[] REMOVE_CHARACTERS = {'"', '\'', '[', ']', '{', '(', ')'}; // Characters to remove
+	public final List<String> forceDontKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
+	public final List<String> forceDontKNModFor = new ArrayList<>();//list of words where KNMOD forces it, exact words
 
-	// Constructor to initialize default rules.
 	public KNMod() {
-		retianBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform")); //you dont want to KNMOD show block
-		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "(("));
+		retainBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform")); //you dont want to KNMOD show block
+		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu("));
 		forceDontKNModForStartsWith.add("label start");
 		forceDontKNModFor.addAll(Arrays.asList("or", "and"));
 	}
@@ -78,6 +77,7 @@ public class KNMod {
 		FileWriter fw = new FileWriter(destinationPath);
 		// Write header lines to the destination file.
 		writeLineToDisk("define KN_MOD = Character(\"KN_MOD\", color=\"#ff0000\")", fw);
+
 		writeLineToDisk("# java -jar modder-2.jar " + realArgs, fw);
 		writeLineToDisk("# ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/", fw);
 		writeLineToDisk("# modded by modder2" + version + " program. Created by BulliThulli", fw);
@@ -102,7 +102,7 @@ public class KNMod {
 	/**
 	 * Recursively processes the symbol hierarchy and writes transformed content into the output file.
 	 *
-	 * @param symbol         Current `renpySymbol` being processed.
+	 * @param symbol        Current `renpySymbol` being processed.
 	 * @param skipableLines Number of lines to skip initially.
 	 * @return The updated number of processed lines.
 	 */
@@ -115,12 +115,11 @@ public class KNMod {
 			if (!startModding) {
 				if (currentPointedsymbol.getRENPY_TRIMMED_LINE().startsWith(skipableLines)) {
 					startModding = true;
-				} else {
-					continue;
 				}
+				continue;
 			}
 
-			if (currentPointedsymbol.isBlockSymbol() && retianBlock.stream().anyMatch(currentPointedsymbol.getRENPY_TRIMMED_LINE()::startsWith)) {
+			if (currentPointedsymbol.isBlockSymbol() && retainBlock.stream().anyMatch(currentPointedsymbol.getRENPY_TRIMMED_LINE()::startsWith)) {
 				renpySymbol temp = currentPointedsymbol.getLastChainSymbol(currentPointedsymbol.getHIERARCHY_LEVEL(), false, false, false, false, currentPointedsymbol);
 				ArrayList<renpySymbol> patchesChildChainSymbols = currentPointedsymbol.getChainSymbols(currentPointedsymbol.getHIERARCHY_LEVEL(), false, false, false, false, currentPointedsymbol);
 				parserUtils.makeBlockHierarchyStartFromZero(currentPointedsymbol, patchesChildChainSymbols);
@@ -161,15 +160,3 @@ public class KNMod {
 		return renpySymbol;
 	}
 }
-
-/**
- * define sb_i_phone_nude_event = Event(
- * location="home_isabelroom",
- * category="technical",
- * label="sb_i_phone_switch_naked_clothes",
- * title=_(""),
- * main_condition=( "isa.ap_tier>=14 and 'sb_j_cooking.level10' in seen_sb and 'sb_i_phone.level7' in seen_sb", _("")),
- * type="auto"
- * )
- * //todo treat above as single block, even thogh block does not ends wiht :
- */
