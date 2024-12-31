@@ -23,14 +23,14 @@ import static org.bullithulli.utils.modUtils.knmodSay;
 public class KNMod {
 	public static final List<String> forceKNModForStartsWith = new ArrayList<>();//list of blocks where KN MOD forces it
 	protected static final List<String> retainBlock = new ArrayList<>(); //list of blocks where KNMOD doesnt apply to it
-	private static final char[] REMOVE_CHARACTERS = {'"', '\'', '[', ']', '{', '(', ')'}; // Characters to remove
+	private static final char[] REMOVE_CHARACTERS = {'"', '\'', '[', ']', '{', '}', '(', ')'}; // Characters to remove
 	public final List<String> forceDontKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
 	public final List<String> forceDontKNModFor = new ArrayList<>();//list of words where KNMOD forces it, exact words
 
 	public KNMod() {
 		retainBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform")); //you dont want to KNMOD show block
-		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu("));
-		forceDontKNModForStartsWith.add("label start");
+		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu(", "$ renpy.quit(", "$renpy.quit("));
+		forceDontKNModForStartsWith.addAll(Arrays.asList("label start", "default "));
 		forceDontKNModFor.addAll(Arrays.asList("or", "and"));
 	}
 
