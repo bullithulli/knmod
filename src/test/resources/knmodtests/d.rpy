@@ -1,0 +1,6 @@
+menu:
+    "'Whatever He Saw... *Memory Deleted*'":
+        fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... *Memory Deleted*{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
+    "'Whatever He Saw... He Will Still Like You The Same'":
+        fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... He will still like you the same.{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
+marilyn "Will he really do so...?"

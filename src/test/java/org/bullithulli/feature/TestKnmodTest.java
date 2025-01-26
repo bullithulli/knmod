@@ -115,7 +115,6 @@ public class TestKnmodTest {
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
 		assertEquals(solution, content);
 	}
-
 	@Test
 	public void test6() throws Exception {
 		String solution = String.format("""
@@ -454,6 +453,32 @@ public class TestKnmodTest {
 		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("dir4/h.rpy")).getPath();
 		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
 		String content = new String(Files.readAllBytes(Paths.get("/tmp/out"))).replaceAll("    ", "\t");
+		assertEquals(solution, content);
+	}
+
+
+	@Test
+	public void test15() throws Exception {
+		String solution = String.format("""
+				define KN_MOD = Character("KN_MOD", color="#ff0000")
+				# java -jar modder-2.jar null
+				# ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
+				# modded by modder2Jan-2025-alpha0.1 program. Created by BulliThulli
+				KN_MOD "menu:"
+				KN_MOD "Whatever He Saw... *Memory Deleted*:"
+				fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... *Memory Deleted*{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
+				KN_MOD "Whatever He Saw... He Will Still Like You The Same:"
+				fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... He will still like you the same.{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
+				marilyn "Will he really do so...?"
+				KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
+				KN_MOD "modded by modder2 Jan-2025-alpha0.1 program. Created by BulliThulli"
+				python:
+				    renpy.input("Ignore this box. It is just added by me to verify if you reached the end of the game", length=32)
+				""", version, version);
+		Modder2 modder2 = new Modder2();
+		String absolutePath = Objects.requireNonNull(getClass().getClassLoader().getResource("knmodtests/d.rpy")).getPath();
+		modder2.verifyAndExecuteKNModFeature(absolutePath, null, null);
+		String content = new String(Files.readAllBytes(Paths.get("/tmp/out")));
 		assertEquals(solution, content);
 	}
 
