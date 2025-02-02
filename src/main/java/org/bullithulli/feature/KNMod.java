@@ -26,10 +26,9 @@ public class KNMod {
 	private static final char[] REMOVE_CHARACTERS = {'"', '\'', '[', ']', '{', '}', '(', ')'}; // Characters to remove
 	public final List<String> forceDontKNModForStartsWith = new ArrayList<>();//list of blocks where KNMOD forces it
 	public final List<String> forceDontKNModFor = new ArrayList<>();//list of words where KNMOD forces it, exact words
-
 	public KNMod() {
 		retainBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform")); //you dont want to KNMOD show block
-		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "renpy.call", "renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu(", "$ renpy.quit(", "$renpy.quit("));
+		forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "$ renpy.quit", "renpy.call", "$ renpy.call", "renpy.block_rollback", "$ renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu(", "$ renpy.quit(", "$renpy.quit("));
 		forceDontKNModForStartsWith.addAll(Arrays.asList("label start", "default "));
 		forceDontKNModFor.addAll(Arrays.asList("or", "and"));
 	}
