@@ -88,6 +88,7 @@ public class Modder2 {
         log.info("                                            --forceKNModForStartsWith=String                   did you find new symbols that need to be KNMODed. Add them here");
         log.info("                            LABEL_LOOKUP:   mandatory fields: --file --key; Optional fields: --removefromsource --stopOnNewlabel --stopOnNextLabelJump --followInnerJumps --followInnerCalls  --followScreenCalls");
         log.info("                                            --key=STRING                        Label to Lookup");
+        log.info("                                            --file=/path/to/folder              Path to your game folder/rpy files locations (it will do recursive lookup)");
         log.info("                                            --removefromsource=BOOLEAN          Erase label definition in source file if matches. Defaults to false");
         log.info("                                            --stopOnNewlabel=BOOLEAN            Stop lookup label once new label is found. Defaults to true");
         log.info("                                            --stopOnNextLabelJump=BOOLEAN       Stop lookup label once new jump is found within definition. Defaults to false");

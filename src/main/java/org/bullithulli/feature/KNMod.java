@@ -48,7 +48,8 @@ public class KNMod {
                 .replace("\\", "\\\\")  // Escape backslashes
                 .replace("\n", "\\n")   // Escape newlines
                 .replace("\t", "\\t")   // Escape tabs
-                .replace("\r", "\\r"));
+                .replace("\r", "\\r")
+                .replace(":",""));
     }
 
     /**

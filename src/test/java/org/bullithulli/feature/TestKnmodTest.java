@@ -74,11 +74,11 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label E4_Start: #Figure out which branch were on"
-                KN_MOD "if mc_cancel_apurna_date == 1 or apurna_love == 0 or apurna_love == 2: #on Aprils branch"
+                KN_MOD "label E4_Start #Figure out which branch were on"
+                KN_MOD "if mc_cancel_apurna_date == 1 or apurna_love == 0 or apurna_love == 2 #on Aprils branch"
                 $E3Branch = "April"
                 KN_MOD "jump E4_April"
-                KN_MOD "else: #on Apurnas branch"
+                KN_MOD "else #on Apurnas branch"
                 $E3Branch = "Apurna"
                 KN_MOD "jump E4_Apurna"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
@@ -100,9 +100,9 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
+                KN_MOD "if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 hello #somecomment
-                KN_MOD "else if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER: # IF MC has baby duties tonight, MC has baby duty Wednesday night"
+                KN_MOD "else if v3s27_mc_baby_schedulewednesday == BabyDuty.ALONE or v3s27_mc_baby_schedulewednesday == BabyDuty.WITH_PARTNER # IF MC has baby duties tonight, MC has baby duty Wednesday night"
                 world
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
@@ -123,12 +123,12 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label z:"
-                KN_MOD "menu:"
-                KN_MOD "What about the fraternities?:"
-                KN_MOD "if mc.frat == Frat.WOLVES: # -if mc.frat, Frat.WOLVES"
+                KN_MOD "label z"
+                KN_MOD "menu"
+                KN_MOD "What about the fraternities?"
+                KN_MOD "if mc.frat == Frat.WOLVES # -if mc.frat, Frat.WOLVES"
                 u "Do you think they're coming for the Wolves too?"
-                KN_MOD "else: ### ERROR: else"
+                KN_MOD "else ### ERROR else"
                 u "Do you think they're reviewing the Apes?"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
@@ -149,11 +149,11 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label z:"
-                KN_MOD "menu dsa:"
-                KN_MOD "Give me that:"
-                KN_MOD "menufail_label=ep2s83_quiet: #TIMED CHOICE if time expires, jump to Say nothing"
-                KN_MOD "Give me that:"
+                KN_MOD "label z"
+                KN_MOD "menu dsa"
+                KN_MOD "Give me that"
+                KN_MOD "menufail_label=ep2s83_quiet #TIMED CHOICE if time expires, jump to Say nothing"
+                KN_MOD "Give me that"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
                 python:
@@ -258,7 +258,7 @@ public class TestKnmodTest {
                         easeout 1.0 alpha .75
                         easein 1.0 alpha 1.0
                         repeat
-                KN_MOD "label scene_003_summoning_wood:"
+                KN_MOD "label scene_003_summoning_wood"
                 play sound "audio/sfx/ambience/sfx_ambience_forest.ogg" loop fadein 1.0 volume 0.125
                 KN_MOD "show screen text_onlyEarth, Present Day as intro_text with Dissolve3.0"
                 with Pause(1.0)
@@ -282,7 +282,7 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label later02:"
+                KN_MOD "label later02"
                 scene b028 with dissolve
                 call phone_start from _call_phone_start
                 call message_start("SABRINA", "hey") from _call_message_start
@@ -320,7 +320,7 @@ public class TestKnmodTest {
                 	linear 1 ypos -5
                 	linear 1 ypos 5
                 	repeat
-                KN_MOD "label car:"
+                KN_MOD "label car"
                 hello anwar
                 hello kai
                 scene sc13-nighrestlore-10:
@@ -353,7 +353,7 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label zoom:"
+                KN_MOD "label zoom"
                 tina "Wha~"
                 scene sc07-home-15 with dissolve
                 heather "Right on time! The breakfast is almost ready, take a seat."
@@ -411,14 +411,14 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label end_sandbox:"
-                KN_MOD "if sb_choice:"
-                KN_MOD "if time.is_night:"
+                KN_MOD "label end_sandbox"
+                KN_MOD "if sb_choice"
+                KN_MOD "if time.is_night"
                 $ sb_night = True
-                KN_MOD "else:"
+                KN_MOD "else"
                 $ increase_time()
                 KN_MOD "call play_nav_music music_name=sb_end_paramsmusic_name"
-                KN_MOD "if sb_choice != exit:"
+                KN_MOD "if sb_choice != exit"
                 $ seen_sb.add(sb_choice)
                 $ check_leisure_time()
                 $ check_yoga_master()
@@ -426,24 +426,24 @@ public class TestKnmodTest {
                 KN_MOD "if sb_end_paramsap_granted and"
                 KN_MOD "sb_end_paramsap_granted > 0 and sb_eventssb_choice.split.0.can_grant_apsb_choice"
                 KN_MOD "or"
-                KN_MOD "sb_end_paramsap_granted < 0:"
+                KN_MOD "sb_end_paramsap_granted < 0"
                 window hide
                 $ sb_events[sb_choice.split(".")[0]].npc.add_stat("ap", sb_end_params["ap_granted"])
                 scene black with fade
-                KN_MOD "if sb_end_paramsmap:"
+                KN_MOD "if sb_end_paramsmap"
                 $ go_to(L_map_main, previous=False)
-                KN_MOD "elif sb_end_paramsgoto_loc is None:"
+                KN_MOD "elif sb_end_paramsgoto_loc is None"
                 KN_MOD "jump expression current_room"
-                KN_MOD "else:"
+                KN_MOD "else"
                 $ go_to(sb_end_params["goto_loc"])
-                KN_MOD "else:"
+                KN_MOD "else"
                 KN_MOD "call play_nav_music music_name=sb_end_paramsmusic_name"
                 scene black with fade
-                KN_MOD "if sb_end_paramsmap:"
+                KN_MOD "if sb_end_paramsmap"
                 $ go_to(L_map_main, previous=False)
-                KN_MOD "elif sb_end_paramsgoto_loc is None:"
+                KN_MOD "elif sb_end_paramsgoto_loc is None"
                 KN_MOD "jump expression current_room"
-                KN_MOD "else:"
+                KN_MOD "else"
                 $ go_to(sb_end_params["goto_loc"])
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
                 KN_MOD "modded by modder2 %s program. Created by BulliThulli"
@@ -465,10 +465,10 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "menu:"
-                KN_MOD "Whatever He Saw... *Memory Deleted*:"
+                KN_MOD "menu"
+                KN_MOD "Whatever He Saw... *Memory Deleted*"
                 fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... *Memory Deleted*{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
-                KN_MOD "Whatever He Saw... He Will Still Like You The Same:"
+                KN_MOD "Whatever He Saw... He Will Still Like You The Same"
                 fan "{size=20}{i}{color=#5757FF}MaryJinxFan4Ever:{/color} Just how bad was the secret?{p=0.1}{color=#5757FF}WillieBonka:{/color} Don't cry or I'll cry too T_T {p=0.1}{color=#5757FF}[nametwo]:{/color} Whatever he saw... He will still like you the same.{p=0.1}{color=#5757FF}AmDirty:{/color} Yeah, if he really loves you then he wouldn't care at all.{p=0.1}{color=#5757FF}DaSalad:{/color} Agree with [nametwo] and AmDirty. #MaryJinxBoyfriend Will Love You No Matter What.{p=0.1}{color=#5757FF}SunnyDeezNutz:{/color} Relax Mary Jinx, It'll be fine tomorrow morning."
                 marilyn "Will he really do so...?"
                 KN_MOD "ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/"
@@ -517,22 +517,22 @@ public class TestKnmodTest {
                 # java -jar modder-2.jar null
                 # ModWork created and maintained at https://f95zone.to/threads/renpy-visualnovel-to-kinetic-novel-convertor.172769/
                 # modded by modder2%s program. Created by BulliThulli
-                KN_MOD "label xx:"
+                KN_MOD "label xx"
                 scene select (3)
                 with dissolve
-                KN_MOD "menu:"
-                KN_MOD "Shes your non-@unt:"
+                KN_MOD "menu"
+                KN_MOD "Shes your non-@unt"
                 python:
                     arelat = "non-@unt"
-                KN_MOD "Other:"
+                KN_MOD "Other"
                 $ persistent.Amrelation = renpy.input("What's she to you?")
                 $ persistent.Amrelation = persistent.Amrelation.strip() or "non-@unt"
                 mc "She is my [arelat]."
-                KN_MOD "menu:"
-                KN_MOD "You are her student:"
+                KN_MOD "menu"
+                KN_MOD "You are her student"
                 python:
                     arelatmc = "student"
-                KN_MOD "Other:"
+                KN_MOD "Other"
                 $ persistent.Amrelationmc = renpy.input("You are her:")
                 $ persistent.Amrelationmc = persistent.Amrelationmc.strip() or "student"
                 window hide
@@ -558,7 +558,7 @@ public class TestKnmodTest {
 //                python:
 //                        kstm = renpy.input("What's your relationship with her? (If you leave it blank, she'll be your stepmom.)")
 //                kstm = kstm.strip()
-//                KN_MOD "if not kstm:"
+//                KN_MOD "if not kstm"
 //                kstm = "Stepmom"
 //                stepson = renpy.input("What's her relationship with you? (If you leave it blank, you'll be her stepson.)")
 //                stepson = stepson.strip()
