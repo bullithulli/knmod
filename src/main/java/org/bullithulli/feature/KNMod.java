@@ -29,7 +29,7 @@ public class KNMod {
 
     public KNMod() {
         retainBlock.addAll(Arrays.asList("python", "define", "style", "screen", "image", "scene", "show", "init", "class", "transform","camera")); //you dont want to KNMOD show block
-        forceKNModForStartsWith.addAll(Arrays.asList("return ", "call", "menu", "renpy.quit", "$ renpy.quit", "renpy.call", "$ renpy.call", "renpy.block_rollback", "$ renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu(", "$ renpy.quit(", "$renpy.quit(","$ renpy.full_restart()","$renpy.full_restart()"));
+        forceKNModForStartsWith.addAll(Arrays.asList("$ui.interact","$ ui.interact","return ", "call", "menu", "renpy.quit", "$ renpy.quit", "renpy.call", "$ renpy.call", "renpy.block_rollback", "$ renpy.block_rollback", "if ", "else ", "elif ", "label", "show screen ", "((", "$ MainMenu(", "$MainMenu(", "$ renpy.quit(", "$renpy.quit(","$ renpy.full_restart()","$renpy.full_restart()"));
         forceDontKNModForStartsWith.addAll(Arrays.asList("label start", "default "));
         forceDontKNModFor.addAll(Arrays.asList("or", "and"));
     }
