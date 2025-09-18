@@ -35,7 +35,7 @@ public class parser {
     // if asdasd or
     //		UserDataHandler =23 --->true
 
-    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.:$\\-\"'’\\?@í][a-zA-Z0-9_А-Яа-яЁё,\\$í@:\\\\<>.*…&+/%\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*(:|and|or|\\{|\\()\\s*(?:#.*)?$";
+    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.:$\\-\"'’\\?@í][a-zA-Z0-9_А-Яа-яЁё,‘’–\\$í@:\\\\<>.*…&+/%\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*(:|and|or|\\{|\\()\\s*(?:#.*)?$";
     final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
     final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]+\\\".+\".*";
