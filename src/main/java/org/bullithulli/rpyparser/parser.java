@@ -36,7 +36,7 @@ public class parser {
     //		UserDataHandler =23 --->true
 
     final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.:$\\-\"'’\\?@í][â-ẑ\\;\\—a-zA-Z0-9_А-Яа-яЁё,‘’–\\$í@:\\\\<>.*…&+/%\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*(:|and|or|\\{|\\()\\s*(?:#.*)?$";
-    final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*\\s+\".+";
+    final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*(?:\\s+\\w+)?\\s+\".+\"\\s*(?:#.*)?$";
     final String regex_detect_for_no_speaker_texts = "^\\s*\"";
     final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]+\\\".+\".*";
     final String regex_get_between_doubleQuotes = "\".*\"";
@@ -55,9 +55,9 @@ public class parser {
     Pattern pattern_for_tl_original_line = Pattern.compile(regex_detect_tl_originalLine);
     Pattern pattern_get_between_doubleQuotes = Pattern.compile(regex_get_between_doubleQuotes);
 
-    public HashMap<String, String> createTranslationTable(File fromFile) throws FileNotFoundException {
+    public HashMap<String, String> createTranslationTable(File fromTLFile) throws FileNotFoundException {
         HashMap<String, String> translationMap = new HashMap<>();
-        Scanner sc = new Scanner(fromFile);
+        Scanner sc = new Scanner(fromTLFile);
         boolean keyFound = false;
         String key = null, value = null;
         while (sc.hasNextLine()) {
@@ -172,7 +172,6 @@ public class parser {
         return root;
     }
 
-    /* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
 
     /**
      * Gets the dynamic indent of the given line based on its parent hierarchy.
@@ -189,7 +188,6 @@ public class parser {
      * @param untrimmedLine    The line to get the dynamic indent of.
      * @return The dynamic indent of the given line.
      */
-    /* <<<<<<<<<<  4d067055-1097-444b-96a9-8883978296fb  >>>>>>>>>>> */
     private int getDynmaicIndent(boolean basedOnTabCounts, String untrimmedLine) {
         // Get whitespace count for current line
         int currentWhitespaceCount = countLeadingWhitespaces(untrimmedLine);

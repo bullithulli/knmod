@@ -80,4 +80,23 @@ public class TestTranslateItTest {
                         """.trim(),
                 new String(Files.readAllBytes(new File("/tmp/out").toPath())).trim());
     }
+
+    @Test
+    public void translateTest5() throws Exception {
+        URL fileURL = getClass().getClassLoader().getResource("parserTests/translate5.rpy");
+        assert fileURL != null;
+        File tlFile = new File(fileURL.toURI());
+        fileURL = getClass().getClassLoader().getResource("parserTests/translateTest5.rpy");
+        assert fileURL != null;
+        File rpyFile = new File(fileURL.toURI());
+        new translateIt().generateTranslatedScript(rpyFile.getAbsolutePath(), tlFile.getAbsolutePath(), "/tmp/out", false);
+        assertEquals("""
+                        m norm "Hey sleepyhead, wake up! Are you sleeping until lunch again?"
+                        n sad "{i}(*yawn*){/i} Yeah [NameMom!t], Just... Five more minutes..."
+                        m smile "Get up, get up! Breakfast is almost ready! I hope you didn't forget that you're coming to work with me, today."
+                        m smile "You thought I would let you sit back the whole summer?"
+                        n sad "Oh, okay, okay. I'm up!"
+                        """.trim(),
+                new String(Files.readAllBytes(new File("/tmp/out").toPath())).trim());
+    }
 }
