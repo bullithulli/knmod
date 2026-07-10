@@ -6,6 +6,7 @@ package org.bullithulli;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bullithulli.feature.KNMod;
+import org.bullithulli.feature.KNModFast;
 import org.bullithulli.feature.labelLookup;
 import org.bullithulli.feature.labelReplacer;
 import org.bullithulli.feature.translateIt;
@@ -20,6 +21,7 @@ public class Modder2 {
     public static final String eol = "\n";
     public static String realArgs;
     public KNMod KNmod;
+    public KNModFast KNmodFast;
     boolean isKnMODFeatureRequested = false;
     boolean isTranslateFeatureRequested = false;
     boolean isLabelLookUpFeatureRequested = false;
@@ -43,6 +45,7 @@ public class Modder2 {
 
     public Modder2() {
         KNmod = new KNMod();
+        KNmodFast = new KNModFast();
         lookupLabel = new labelLookup();
     }
 
@@ -146,7 +149,10 @@ public class Modder2 {
         if (startModFromSymbol == null) {
             log.error("--startModFromSymbol was not passed. defaulted to null");
         }
-        KNmod.convertRenPyToKineticNovel(inputFilePathForRequestedFeature, startModFromSymbol, destinationFileOPath);
+        // Sync force lists from old KNmod to KNmodFast for backward compatibility
+        KNmodFast.addAllForceDontKNModPrefixes(KNmod.forceDontKNModForStartsWith);
+        KNmodFast.addAllForceKNModPrefixes(KNMod.forceKNModForStartsWith);
+        KNmodFast.convertRenPyToKineticNovel(inputFilePathForRequestedFeature, startModFromSymbol, destinationFileOPath);
     }
 
     public void verifyAndExecuteLabelReplaceFeature(String sourceFile, String patchFile, String destinationFile, String listOfLabels, boolean isTabIntended, int spaceSize) throws Exception {
@@ -247,8 +253,10 @@ public class Modder2 {
                 followInnerCalls = Boolean.parseBoolean(arg.substring("--followInnerCalls=".length()));
             } else if (arg.startsWith("--forceKNModForStartsWith=")) {
                 KNMod.forceKNModForStartsWith.addAll(Arrays.asList(arg.substring("--forceKNModForStartsWith=".length()).split(",")));
+                KNmodFast.addAllForceKNModPrefixes(Arrays.asList(arg.substring("--forceKNModForStartsWith=".length()).split(",")));
             } else if (arg.startsWith("--forceDontKNModForStartsWith=")) {
                 KNmod.forceDontKNModForStartsWith.addAll(Arrays.asList(arg.substring("--forceDontKNModForStartsWith=".length()).split(",")));
+                KNmodFast.addAllForceDontKNModPrefixes(Arrays.asList(arg.substring("--forceDontKNModForStartsWith=".length()).split(",")));
             } else if (arg.startsWith("--followScreenCalls=")) {
                 followScreenCalls = Boolean.parseBoolean(arg.substring("--followScreenCalls=".length()));
             } else if (arg.startsWith("--indentSize=")) {

@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static org.bullithulli.utils.textUtils.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestTextUtilsTest {
     @Test
@@ -34,6 +36,31 @@ public class TestTextUtilsTest {
         assertEquals("\"abcd\"", getUncommentedString("#      \"abcd\""));
         assertEquals("'abcd'", getUncommentedString("#      'abcd'"));
         assertEquals("'abcd'", getUncommentedString("#    #######  'abcd'"));
+        assertEquals("", getUncommentedString("#   !!!"));
+    }
 
+    @Test
+    public void removeAndContainHelpersCoverSymbolAndWordBoundaries() {
+        assertEquals("abc", removeQuotesFromLine("\"a'b\"c'"));
+        assertEquals("call screen hi", removeBrackets("call (screen) hi"));
+        assertEquals("call screen hi", removeFlowerBrackets("call {screen} hi"));
+        assertEquals("call screen hi", removeSquareBrackets("call [screen] hi"));
+
+        assertTrue(containsExactWord("and or menu", "and"));
+        assertTrue(containsExactWord("and\tor\tmenu", "or"));
+        assertFalse(containsExactWord("android menu", "and"));
+        assertFalse(containsExactWord("menu or", "orx"));
+        assertFalse(containsExactWord("", "or"));
+    }
+
+    @Test
+    public void tabAndIndentHelpersHandleExtremeInputs() {
+        assertEquals("", getTabbedString(0));
+        assertEquals("\t\t\t", getTabbedString(3));
+        assertEquals("", getTabbedString(-2));
+        assertEquals(0, countIndentations(0, false, 4));
+        assertEquals(3, countIndentations(3, true, 4));
+        assertEquals(2, countIndentations(8, false, 4));
+        assertEquals(1, countIndentations(7, false, 7));
     }
 }

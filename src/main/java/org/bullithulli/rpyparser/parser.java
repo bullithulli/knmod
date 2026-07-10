@@ -35,9 +35,9 @@ public class parser {
     // if asdasd or
     //		UserDataHandler =23 --->true
 
-    final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.:$\\-\"'’\\?@í][â-ẑ\\;\\—a-zA-Z0-9_А-Яа-яЁё,‘’–\\$í@:\\\\<>.*…&+/%\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*(:|and|or|\\{|\\()\\s*(?:#.*)?$";
-    final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*(?:\\s+\\w+)?\\s+\".+\"\\s*(?:#.*)?$";
-    final String regex_detect_for_no_speaker_texts = "^\\s*\"";
+    public static final String regex_detect_for_block_symbols = "^\\s*([a-zA-Z_,.:$\\-\"'’\\?@í][â-ẑ\\;\\—a-zA-Z0-9_А-Яа-яЁё,‘’–\\$í@:\\\\<>.*…&+/%\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]*)\\s*(:|and|or|\\{|\\()\\s*(?:#.*)?$";
+    public static final String regex_detect_for_speak_text = "^[a-z|A-Z]\\w*(?:\\s+\\w+)?\\s+\".+\"\\s*(?:#.*)?$";
+    public static final String regex_detect_for_no_speaker_texts = "^\\s*\"";
     final String regex_detect_tl_originalLine = "^\\s*(#|old)[a-zA-Z0-9_А-Яа-яЁё,<>.…&+\\-=\"(\\)\\{\\}\\s\\t”“#’'\\?\\|\\]\\[!]+\\\".+\".*";
     final String regex_get_between_doubleQuotes = "\".*\"";
     /**
@@ -49,9 +49,9 @@ public class parser {
     int CURRENT_HIERARCHY = 0;
     renpySymbol previousHierarchyParent = root;
     renpySymbol previousChainParent = root;
-    Pattern pattern_for_speaker_text = Pattern.compile(regex_detect_for_speak_text);
-    Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
-    Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
+    public static final Pattern pattern_for_speaker_text = Pattern.compile(regex_detect_for_speak_text);
+    public static final Pattern pattern_for_no_speaker_texts = Pattern.compile(regex_detect_for_no_speaker_texts);
+    public static final Pattern pattern_for_block_symbols = Pattern.compile(regex_detect_for_block_symbols);
     Pattern pattern_for_tl_original_line = Pattern.compile(regex_detect_tl_originalLine);
     Pattern pattern_get_between_doubleQuotes = Pattern.compile(regex_get_between_doubleQuotes);
 
