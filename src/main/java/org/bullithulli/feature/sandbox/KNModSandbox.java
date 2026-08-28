@@ -235,6 +235,15 @@ public class KNModSandbox {
             log.info("{} orphan labels appended at end (too many to list)", orphanCount);
         }
 
+        System.out.println("\n============================================================");
+        System.out.println("               SANDBOX FLATTENING COMPLETE!");
+        System.out.println("============================================================");
+        System.out.println("Your game has been successfully converted into a single linear script.");
+        System.out.println("\nNEXT STEP:");
+        System.out.println("To inject the KNMod logic into this flattened file, run the following command:");
+        System.out.println("  java -jar modder-2.jar --feature=KNMOD --file=" + destinationPath + " --outfile=" + destinationPath.replace(".rpy", "_knmod.rpy"));
+        System.out.println("============================================================\n");
+
         if (removeFromSource) {
             removeProcessedLabelsFromSource(labelRegistry, visited);
             log.info("Processed labels removed from COPY at: {}. Inspect leftover content there.", workDir);
