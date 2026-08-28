@@ -78,8 +78,8 @@ public class KNModSandbox {
             });
             String valStr = "";
             if (!valList.isEmpty()) {
-                if (valList.size() > 5) {
-                    valStr = " - Values: [" + String.join(", ", valList.subList(0, 5)) + ", ...]";
+                if (valList.size() > 8) {
+                    valStr = " - Values: [" + String.join(", ", valList.subList(0, 5)) + " ..... " + String.join(", ", valList.subList(valList.size() - 3, valList.size())) + "]";
                 } else {
                     valStr = " - Values: [" + String.join(", ", valList) + "]";
                 }
