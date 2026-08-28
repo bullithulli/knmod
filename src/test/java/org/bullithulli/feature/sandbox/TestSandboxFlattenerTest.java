@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TestSandboxFlattenerTest {
 
     private String getTestResourcePath() {
-        return Objects.requireNonNull(getClass().getClassLoader().getResource("sandboxtests")).getPath();
+        return Objects.requireNonNull(getClass().getClassLoader().getResource("sandboxtests/original")).getPath();
     }
 
     @Test
