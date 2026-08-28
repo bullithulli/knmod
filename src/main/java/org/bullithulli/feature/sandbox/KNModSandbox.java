@@ -178,7 +178,7 @@ public class KNModSandbox {
         for (String currentStart : startingLabels) {
             if (flattener.getVisited().contains(currentStart)) continue;
             if (shouldSkipOrphan(currentStart)) continue;
-            flattenedLines.addAll(flattener.flatten(currentStart));
+            flattenedLines.addAll(flattener.flatten(currentStart, false));
         }
 
         if (includeOrphans && (groupBy == null || groupBy.isEmpty())) {
@@ -212,7 +212,10 @@ public class KNModSandbox {
 
         Set<String> visited = flattener.getVisited();
         int totalLabels = labelRegistry.size();
-        int visitedCount = visited.size();
+        int visitedCount = 0;
+        for (String v : visited) {
+            if (labelRegistry.containsKey(v)) visitedCount++;
+        }
         int orphanCount = totalLabels - visitedCount;
 
         log.info("Assembly complete: {} lines, {}/{} labels visited ({} orphans), output: {}",

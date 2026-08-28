@@ -38,8 +38,12 @@ public class SandboxFlattener {
     }
 
     public List<String> flatten(String startLabel) {
+        return flatten(startLabel, true);
+    }
+
+    public List<String> flatten(String startLabel, boolean clearVisited) {
         output.clear();
-        visited.clear();
+        if (clearVisited) visited.clear();
         currentDepth = 0;
         flattenLabel(startLabel);
         return output;

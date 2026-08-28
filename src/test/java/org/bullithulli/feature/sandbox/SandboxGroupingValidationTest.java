@@ -16,6 +16,28 @@ import static org.junit.Assert.*;
 
 public class SandboxGroupingValidationTest {
     @Test
+    public void testAmnesiaFlattenerBugPrevention() throws Exception {
+        KNModSandbox sandbox = new KNModSandbox();
+        sandbox.setStartLabel("start");
+        // Setting a groupBy triggers the loop over all starting labels
+        sandbox.setGroupBy(java.util.Arrays.asList("FILE"));
+        
+        String outPath = System.getProperty("java.io.tmpdir") + "/sandbox_amnesia.rpy";
+        String testDir = java.util.Objects.requireNonNull(getClass().getClassLoader().getResource("sandboxtests/amnesia_bug")).getPath();
+        sandbox.assemble(testDir, outPath);
+
+        String content = java.nio.file.Files.readString(java.nio.file.Path.of(outPath));
+
+        // The main_story should only be physically written ONCE!
+        int count = content.split("label main_story:").length - 1;
+        assertEquals("Amnesia Bug! main_story was duplicated. The visited list was likely cleared between orphans.", 1, count);
+
+        // The orphan click should correctly show that it was blocked from duplicating the story
+        assertTrue("Orphan must hit the already visited marker", content.contains("[Already visited: main_story]"));
+
+        new java.io.File(outPath).delete();
+    }
+    @Test
     public void testTrickyRenpyEdgeCases() throws Exception {
         KNModSandbox sandbox = new KNModSandbox();
         sandbox.setStartLabel("tricky_start");
