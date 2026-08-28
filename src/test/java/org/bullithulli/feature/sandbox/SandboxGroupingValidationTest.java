@@ -50,6 +50,7 @@ public class SandboxGroupingValidationTest {
         assertTrue("Must reach python_call_target via renpy.call", content.contains("Inside python call"));
         assertTrue("Must reach from_clause_target via call ... from", content.contains("Inside from clause target"));
         assertTrue("Must reach screen_call_target via screen action Call", content.contains("Inside screen call"));
+        assertTrue("Must reach unicode label name", content.contains("Special characters!"));
 
         new java.io.File(outPath).delete();
     }

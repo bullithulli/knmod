@@ -2,6 +2,7 @@ label tricky_start:
     $ renpy.call("python_call_target")
     call from_clause_target from _call_something_1
     call screen tricky_screen
+    call unicode_test
     return
 
 label python_call_target:
@@ -17,4 +18,11 @@ screen tricky_screen():
 
 label screen_call_target:
     "Inside screen call"
+    return
+
+label unicode_test:
+    jump rötärnØ
+
+label rötärnØ():
+    "Special characters!"
     return

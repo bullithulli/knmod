@@ -12,8 +12,8 @@ public class SandboxFlattener {
     private static final Pattern JUMP_PATTERN = Pattern.compile("^jump\\s+([^\\s]+)");
     private static final Pattern CALL_PATTERN = Pattern.compile("^call\\s+([^\\s]+)");
     private static final Pattern CALL_SCREEN_PATTERN = Pattern.compile("^call\\s+screen\\s+(\\w+)");
-    private static final Pattern RENPY_JUMP_PATTERN = Pattern.compile("renpy\\.jump\\s*\\(\\s*[\"'](\\w+)[\"']\\s*\\)");
-    private static final Pattern RENPY_CALL_PATTERN = Pattern.compile("renpy\\.call\\s*\\(\\s*[\"'](\\w+)[\"']\\s*\\)");
+    private static final Pattern RENPY_JUMP_PATTERN = Pattern.compile("renpy\\.jump\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
+    private static final Pattern RENPY_CALL_PATTERN = Pattern.compile("renpy\\.call\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
     private static final Pattern MENU_CHOICE_PATTERN = Pattern.compile("^\".*\"\\s*(?:if\\s+.*)?\\s*:");
 
     private final Map<String, SandboxScanner.LabelEntry> labelRegistry;
