@@ -9,6 +9,7 @@ import org.bullithulli.feature.KNMod;
 import org.bullithulli.feature.KNModFast;
 import org.bullithulli.feature.labelLookup;
 import org.bullithulli.feature.labelReplacer;
+import org.bullithulli.feature.sandbox.KNModSandbox;
 import org.bullithulli.feature.translateIt;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class Modder2 {
     boolean isTranslateFeatureRequested = false;
     boolean isLabelLookUpFeatureRequested = false;
     boolean isLabelReplaceFeatureRequested = false;
+    boolean isSandboxFeatureRequested = false;
     boolean removeFromSourceOnLabelHit = false;
     boolean stopLabelLookUpOnceNewLabelFound = true;
     boolean stopOnNextLabelJump = false;
@@ -42,6 +44,14 @@ public class Modder2 {
     boolean followScreenCalls = false;
     String patchFrom = null;
     String replaceBy = null;
+    String sandboxStartLabel = "start";
+    int sandboxMaxDepth = 500;
+    String sandboxSkipLabels = null;
+    boolean sandboxIncludeOrphans = true;
+    boolean sandboxRemoveFromSource = false;
+    boolean sandboxAnalyze = false;
+    String sandboxGroupBy = null;
+    String sandboxWorkDir = null;
 
     public Modder2() {
         KNmod = new KNMod();
@@ -104,6 +114,13 @@ public class Modder2 {
         log.info("                                             --replaceBy=LIST[STR->STR]         A list of labels you want to patch, eg. --replaceBy=labelA->labelPatchA,labelB->labelPatchB. Defaults to []");
         log.info("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
         log.info("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
+        log.info("                            KNMOD_SANDBOX:   mandatory fields: --file; Optional fields: --outfile --startLabel --maxDepth --skipLabels --includeOrphans --removeFromSource --workDir");
+        log.info("                                             --startLabel=STRING                 Label to start flattening from. Defaults to 'start'");
+        log.info("                                             --maxDepth=INT                      Max recursion depth. Defaults to 500");
+        log.info("                                             --skipLabels=l1,l2                  Labels to skip during flattening");
+        log.info("                                             --includeOrphans=BOOLEAN            Append unreached labels at end. Defaults to true");
+        log.info("                                             --removeFromSource=BOOLEAN          Remove processed labels from copy. Defaults to false");
+        log.info("                                             --workDir=PATH                      MANDATORY when removeFromSource=true. .rpy files are copied here (originals untouched)");
         log.info("                            TRANSLATE_RPY:   mandatory fields: --file --tlFile; Optional fields: --outfile --indentType --indentSize");
         log.info("                                             --tlFile=/path/toFile              A translation rpy file where it contains translations");
         log.info("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
@@ -203,9 +220,43 @@ public class Modder2 {
         new translateIt().generateTranslatedScript(sourceFile, tlFile, destinationFile, isTabIntended);
     }
 
+    public void verifyAndExecuteSandboxFeature(String sourceDir, String destinationPath) throws Exception {
+        boolean forceExit = false;
+        if (sourceDir == null) {
+            log.error("You must pass --file parameter with KNMOD_SANDBOX feature (path to game directory)");
+            forceExit = true;
+        }
+        if (forceExit) {
+            System.exit(2);
+        }
+        if (destinationPath == null) {
+            log.error("using default destination location of /tmp/out. or pass --outfile");
+            destinationPath = "/tmp/out";
+        }
+        KNModSandbox sandbox = new KNModSandbox();
+        sandbox.setStartLabel(sandboxStartLabel);
+        sandbox.setMaxDepth(sandboxMaxDepth);
+        sandbox.setIncludeOrphans(sandboxIncludeOrphans);
+        sandbox.setRemoveFromSource(sandboxRemoveFromSource);
+        sandbox.setWorkDir(sandboxWorkDir);
+        if (sandboxGroupBy != null && !sandboxGroupBy.isEmpty()) {
+            sandbox.setGroupBy(java.util.Arrays.asList(sandboxGroupBy.split(",")));
+        }
+        if (sandboxAnalyze) {
+            System.out.println(sandbox.analyze(sourceDir));
+            return;
+        }
+        if (sandboxSkipLabels != null) {
+            sandbox.setSkipLabels(new java.util.HashSet<>(java.util.Arrays.asList(sandboxSkipLabels.split(","))));
+        }
+        sandbox.assemble(sourceDir, destinationPath);
+    }
+
     public void executeArgs() throws Exception {
         if (isKnMODFeatureRequested) {
             verifyAndExecuteKNModFeature(inputFileForRequestedFeature, outputFileForRequestedFeature, startModFromSymbol);
+        } else if (isSandboxFeatureRequested) {
+            verifyAndExecuteSandboxFeature(inputFileForRequestedFeature, outputFileForRequestedFeature);
         } else if (isLabelLookUpFeatureRequested) {
             verifyAndExecuteLabelLookupFeature(lookupKey, inputFileForRequestedFeature, removeFromSourceOnLabelHit, stopLabelLookUpOnceNewLabelFound, stopOnNextLabelJump, followInnerJumps, followInnerCalls, followScreenCalls);
         } else if (isLabelReplaceFeatureRequested) {
@@ -228,6 +279,7 @@ public class Modder2 {
             } else if (arg.startsWith("--feature=")) {
                 switch (arg.substring("--feature=".length())) {
                     case "KNMOD" -> isKnMODFeatureRequested = true;
+                    case "KNMOD_SANDBOX" -> isSandboxFeatureRequested = true;
                     case "LABEL_LOOKUP" -> isLabelLookUpFeatureRequested = true;
                     case "LABEL_REPLACE" -> isLabelReplaceFeatureRequested = true;
                     case "TRANSLATE_RPY" -> isTranslateFeatureRequested = true;
@@ -267,6 +319,22 @@ public class Modder2 {
                 patchFrom = arg.substring("--patchFrom=".length());
             } else if (arg.startsWith("--tlFile=")) {
                 tlFile = arg.substring("--tlFile=".length());
+            } else if (arg.startsWith("--startLabel=")) {
+                sandboxStartLabel = arg.substring("--startLabel=".length());
+            } else if (arg.startsWith("--maxDepth=")) {
+                sandboxMaxDepth = Integer.parseInt(arg.substring("--maxDepth=".length()));
+            } else if (arg.startsWith("--skipLabels=")) {
+                sandboxSkipLabels = arg.substring("--skipLabels=".length());
+            } else if (arg.startsWith("--includeOrphans=")) {
+                sandboxIncludeOrphans = Boolean.parseBoolean(arg.substring("--includeOrphans=".length()));
+            } else if (arg.startsWith("--removeFromSource=")) {
+                sandboxRemoveFromSource = Boolean.parseBoolean(arg.substring("--removeFromSource=".length()));
+            } else if (arg.equals("--analyze")) {
+                sandboxAnalyze = true;
+            } else if (arg.startsWith("--groupBy=")) {
+                sandboxGroupBy = arg.substring("--groupBy=".length());
+            } else if (arg.startsWith("--workDir=")) {
+                sandboxWorkDir = arg.substring("--workDir=".length());
             } else if (arg.startsWith("--indentType=")) {
                 switch (arg.substring("--indentType=".length()).toUpperCase()) {
                     case "TAB" -> indentTypeTAB = true;
