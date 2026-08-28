@@ -10,14 +10,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SandboxScanner {
 
-    private static final Pattern LABEL_PATTERN = Pattern.compile("^label\\s+([^\\s(:]+)\\s*(?:\\(.*\\))?\\s*:");
-    private static final Pattern NAMED_MENU_PATTERN = Pattern.compile("^menu\\s+(\\w+)\\s*:");
-    private static final Pattern SCREEN_PATTERN = Pattern.compile("^screen\\s+(\\w+)\\s*\\(");
-    private static final Pattern JUMP_IN_SCREEN_PATTERN = Pattern.compile("Jump\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
-    private static final Pattern CALL_IN_SCREEN_PATTERN = Pattern.compile("Call\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
+    static final Pattern LABEL_PATTERN = Pattern.compile("^label\\s+([^\\s(:]+)\\s*(?:\\(.*\\))?\\s*:");
+    static final Pattern NAMED_MENU_PATTERN = Pattern.compile("^menu\\s+(\\w+)\\s*:");
+    static final Pattern SCREEN_PATTERN = Pattern.compile("^screen\\s+(\\w+)\\s*\\(");
+    static final Pattern JUMP_IN_SCREEN_PATTERN = Pattern.compile("Jump\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
+    static final Pattern CALL_IN_SCREEN_PATTERN = Pattern.compile("Call\\s*\\(\\s*[\"']([^\"']+)[\"']\\s*\\)");
 
-    private static final Pattern CONDITION_PATTERN = Pattern.compile("([a-zA-Z_]\\w*)\\s*(==|>=|<=|>|<|!=)\\s*([a-zA-Z0-9_\"']+)");
-    private static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("^\\s*\\$\\s*([a-zA-Z_]\\w*)\\s*[-+*\\/]?=");
+    static final Pattern CONDITION_PATTERN = Pattern.compile("([a-zA-Z_]\\w*)\\s*(==|>=|<=|>|<|!=)\\s*(\"[^\"]*\"|'[^']*'|[a-zA-Z0-9_]+)");
+    static final Pattern ASSIGNMENT_PATTERN = Pattern.compile("^\\s*\\$\\s*([a-zA-Z_]\\w*)\\s*[-+*\\/]?=");
 
     private final Map<String, LabelEntry> labelRegistry = new LinkedHashMap<>();
     private final Map<String, List<String>> screenRegistry = new LinkedHashMap<>();
