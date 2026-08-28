@@ -58,7 +58,24 @@ public class KNModSandbox {
             String varName = e.getKey();
             Set<String> vals = dimensionValues.getOrDefault(varName, new HashSet<>());
             List<String> valList = new ArrayList<>(vals);
-            Collections.sort(valList);
+            valList.sort((v1, v2) -> {
+                try {
+                    double d1 = Double.parseDouble(v1);
+                    try {
+                        double d2 = Double.parseDouble(v2);
+                        return Double.compare(d1, d2);
+                    } catch (NumberFormatException e2) {
+                        return -1;
+                    }
+                } catch (NumberFormatException e1) {
+                    try {
+                        Double.parseDouble(v2);
+                        return 1;
+                    } catch (NumberFormatException e2) {
+                        return v1.compareToIgnoreCase(v2);
+                    }
+                }
+            });
             String valStr = "";
             if (!valList.isEmpty()) {
                 if (valList.size() > 5) {
