@@ -92,9 +92,9 @@ public class Modder2 {
         log.info("Options:");
         log.info("  -h, --help                Display help information");
         log.info("  -v, --version             Display version information");
-        log.info("  --file=FILENAME           Specify a file");
+        log.info("  --file=FILENAME           Specify a file (or directory for some features)");
         log.info("  --outfile=FILENAME        Destination output. Defaults to /tmp/out");
-        log.info("  --feature=FEATURE_NAME    The Feature you want to use. Available, KNMOD,LABEL_LOOKUP, LABEL_REPLACE");
+        log.info("  --feature=FEATURE_NAME    The Feature you want to use. Available: KNMOD, KNMOD_SANDBOX, LABEL_LOOKUP, LABEL_REPLACE, TRANSLATE_RPY");
         log.info("                            KNMOD:          mandatory fields: --file; Optional fields: --outfile --forceDontKNModForStartsWith --forceKNModForStartsWith");
         log.info("                                            --startModFromSymbol=String         Don't process the lines till it starts with this symbol. Defaults to null");
         log.info("                                            --forceDontKNModForStartsWith=String               Don't KNMOD the symbols. Defaults to null");
@@ -108,13 +108,14 @@ public class Modder2 {
         log.info("                                            --followInnerJumps=BOOLEAN          Continue lookups if innerJumps are found, and proceed same with innerJumps. Defaults to false");
         log.info("                                            --followInnerCalls=BOOLEAN          Continue lookups if innerCalls are found, and proceed same with innerCalls labels. Defaults to false");
         log.info("                                            --followScreenCalls=BOOLEAN         Continue lookups if innerCalls for screen are found, and proceed same with innerCalls labels. Defaults to false");
-        log.info("                                            --ignoreLabels=label1,label2        List of Labels to ignore while processing. Defaults to []");
         log.info("                            LABEL_REPLACE:   mandatory fields: --file --patchFrom --replaceBy; Optional fields: --outfile --indentType --indentSize");
         log.info("                                             --patchFrom=/path/toFile           A patch rpy file where you want to patch the source file");
         log.info("                                             --replaceBy=LIST[STR->STR]         A list of labels you want to patch, eg. --replaceBy=labelA->labelPatchA,labelB->labelPatchB. Defaults to []");
         log.info("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
-        log.info("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
-        log.info("                            KNMOD_SANDBOX:   mandatory fields: --file; Optional fields: --outfile --startLabel --maxDepth --skipLabels --includeOrphans --removeFromSource --workDir");
+        log.info("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentType=SPACE. Defaults to 4");
+        log.info("                            KNMOD_SANDBOX:   mandatory fields: --file; Optional fields: --outfile --analyze --groupBy --startLabel --maxDepth --skipLabels --includeOrphans --removeFromSource --workDir");
+        log.info("                                             --analyze                           Run a dry-run analysis to map out the strongest grouping variables and files. (Outputs to console)");
+        log.info("                                             --groupBy=var1,var2                 Sort the entire game into logical chronological blocks (e.g. --groupBy=WGV,DAY)");
         log.info("                                             --startLabel=STRING                 Label to start flattening from. Defaults to 'start'");
         log.info("                                             --maxDepth=INT                      Max recursion depth. Defaults to 500");
         log.info("                                             --skipLabels=l1,l2                  Labels to skip during flattening");
@@ -124,7 +125,7 @@ public class Modder2 {
         log.info("                            TRANSLATE_RPY:   mandatory fields: --file --tlFile; Optional fields: --outfile --indentType --indentSize");
         log.info("                                             --tlFile=/path/toFile              A translation rpy file where it contains translations");
         log.info("                                             --indentType=SPACE|TAB             Can be either Space or Tab. It informs the parser how the code is structured. Defaults to Space");
-        log.info("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentTyp=SPACE. Defaults to 4");
+        log.info("                                             --indentSize=INT                   It says, how much spaces are there for single indent, supply this if you are passing --indentType=SPACE. Defaults to 4");
     }
 
     public void verifyAndExecuteLabelLookupFeature(String lookupKey, String inputFilePathForRequestedFeature, boolean removeFromSourceOnMatch, boolean stopAfterNextLabelFound, boolean stopOnNextLabelJump, boolean followInnerJumps, boolean followInnerCalls, boolean followScreenCalls) {
