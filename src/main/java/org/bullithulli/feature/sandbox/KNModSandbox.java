@@ -52,6 +52,22 @@ public class KNModSandbox {
         sb.append("              SANDBOX ANALYSIS COMPLETE\n");
         sb.append("============================================================\n");
         sb.append("[INFO] Found ").append(scanner.getLabelRegistry().size()).append(" playable labels.\n\n");
+        int screenCount = scanner.getScreenRegistry().size();
+        int dimCount = frequencies.size();
+        boolean isSandbox = (screenCount >= 2 || dimCount >= 3);
+
+        sb.append("[INFO] GAME TYPE DETECTION:\n");
+        if (isSandbox) {
+            sb.append("  -> Result: SANDBOX / NON-LINEAR GAME\n");
+            sb.append("  -> Reason: Found ").append(screenCount).append(" interactive map/menu screens and ").append(dimCount).append(" variables gating scenes.\n\n");
+        } else {
+            sb.append("  -> Result: LINEAR VISUAL NOVEL\n");
+            sb.append("  -> Reason: Few interactive screens or variable-gated scenes detected.\n\n");
+            sb.append("[SUGGESTION] You probably do NOT need KNMOD_SANDBOX for this game.\n");
+            sb.append("Try using the standard linear KNMOD feature instead:\n");
+            sb.append("  java -jar modder-2.jar --feature=KNMOD --file=").append(sourceDirectory).append(" --outfile=/tmp/out.rpy\n\n");
+        }
+
         sb.append("[INFO] STRONGEST STORY DIMENSIONS (Variables gating scenes):\n");
         int count = 1;
         for (Map.Entry<String, Integer> e : sortedFreq) {
