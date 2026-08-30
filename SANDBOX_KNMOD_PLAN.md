@@ -25,10 +25,9 @@ Current KNMod just produces garbage for these games: it flattens all branches in
 │                                                              │
 │  Phase 1: Discovery    → Scan all .rpy files, build index    │
 │  Phase 2: Analysis     → Build control-flow graph (CFG)      │
-│  Phase 3: State Model  → Extract variables, conditions, events│
-│  Phase 4: Scheduling   → Topological sort by (day, time, loc)│
-│  Phase 5: Linearization→ Walk CFG, emit linear KN script     │
-│  Phase 6: Emit         → Write output .rpy file              │
+│  Phase 3: Scheduling   → Topological sort by (day, time, loc)│
+│  Phase 4: Linearization→ Walk CFG, emit linear KN script     │
+│  Phase 5: Emit         → Write output .rpy file              │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -142,103 +141,7 @@ Strategy:
 
 ---
 
-## Phase 3: State Model Extraction
-
-### 3.1 Variable Discovery
-**What**: Automatically discover all game-state variables and their types/domains.
-**Why**: Need to know what `day`, `time_of_day`, `room`, flags, relationship counters, etc. exist and what values they can take.
-
-Sources:
-- `default <var> = <value>` declarations → initial values
-- `define <var> = <value>` declarations → constants
-- `$ <var> = <value>` assignments → possible values
-- `if <var> == <value>:` / `elif` conditions → possible values
-- `<var> += 1`, `<var> -= 1` → numeric counter
-- `<set>.add(<item>)` → set membership tracking (like `seen_sb`)
-
-```java
-class GameVariable {
-    String name;
-    VariableType type;          // COUNTER, FLAG, ENUM, SET, STRING, UNKNOWN
-    Object initialValue;
-    Set<Object> possibleValues; // for enums: {"morning", "afternoon", "evening", "night"}
-    List<String> assignments;   // all assignment lines
-    List<String> conditions;    // all condition lines referencing this var
-}
-
-enum VariableType {
-    DAY_COUNTER,        // day, week, month — increments
-    TIME_ENUM,          // time_of_day with fixed set of values
-    LOCATION,           // current_room, current_location
-    FLAG,               // boolean (True/False)
-    RELATIONSHIP,       // numeric score (love, trust, corruption)
-    SEEN_SET,           // set of completed event IDs
-    ENUM,               // fixed set of string/int values
-    UNKNOWN
-}
-```
-
-### 3.2 Variable Classification Heuristics
-
-| Pattern | Type |
-|---------|------|
-| Name contains `day`, `week`, initial value 0/1, incremented | `DAY_COUNTER` |
-| Name contains `time`, `period`, `tod`, values ∈ {morning, afternoon, evening, night} | `TIME_ENUM` |
-| Name contains `room`, `location`, `loc`, assigned label-like strings | `LOCATION` |
-| Values ∈ {True, False}, name has `is_`, `has_`, `_unlocked`, `_done` | `FLAG` |
-| Name contains `love`, `lust`, `trust`, `anger`, `corruption`, `affection`, values numeric | `RELATIONSHIP` |
-| `.add()` / `in` / `not in` operations | `SEEN_SET` |
-
-### 3.3 Event System Detection
-**What**: Detect and parse event registration patterns.
-**Why**: Many sandbox games use an Event class that registers events with conditions.
-
-Common patterns to detect:
-```python
-# Pattern A: Event class registration
-Event(location="kitchen", label="ev_kitchen_01", condition="day >= 3 and love > 5")
-
-# Pattern B: Dictionary-based events  
-events["kitchen_morning"] = {"label": "ev_kitchen_01", "condition": "day >= 3"}
-
-# Pattern C: List-based events
-room_events.append(("ev_kitchen_01", "day >= 3 and time == 'morning'"))
-
-# Pattern D: Direct conditional jumps in room labels
-label kitchen:
-    if day >= 3 and love > 5:
-        jump ev_kitchen_01
-    elif day >= 5:
-        jump ev_kitchen_02
-```
-
-```java
-class GameEvent {
-    String id;                  // unique identifier
-    String label;               // the label to jump to
-    String location;            // where this event triggers
-    String condition;           // when this event is available (raw string)
-    ParsedCondition parsed;     // structured representation
-    Set<String> prereqEvents;   // events that must be seen first
-    int minDay;                 // earliest day this can trigger
-    String timeOfDay;           // required time of day (null = any)
-    Priority priority;          // for ordering when multiple events are available
-}
-
-class ParsedCondition {
-    List<ConditionClause> clauses;  // ANDed together
-}
-
-class ConditionClause {
-    String variable;
-    Operator op;        // ==, !=, >=, <=, >, <, IN, NOT_IN
-    Object value;
-}
-```
-
----
-
-## Phase 4: Execution Scheduling (The Core Algorithm)
+## Phase 3: Execution Scheduling (The Core Algorithm)
 
 ### 4.1 Time-Slot Model
 **What**: Organize all game content into a grid of `(day, timeOfDay, location)` slots.
@@ -264,8 +167,8 @@ Algorithm:
    - `love >= 5` → must come after enough love-building events
    - `time_of_day == "morning"` → must be in a morning slot
 2. Build a DAG: event A → event B means "A must be played before B"
-3. Topological sort respecting the natural ordering: `(day, time_order, location_order)`
-4. If cycles exist (shouldn't in well-formed games), break them arbitrarily and warn
+2. Topological sort respecting the natural ordering: `(day, time_order, location_order)`
+3. If cycles exist (shouldn't in well-formed games), break them arbitrarily and warn
 
 ### 4.3 State Simulation
 **What**: Simulate game state as we schedule events to verify reachability.
@@ -312,12 +215,12 @@ for day = 1 to maxDay:
 After the natural simulation:
 1. Identify unscheduled events
 2. For each, force-set the variables needed to satisfy its conditions
-3. Schedule it in a "bonus round" after the main storyline
-4. Emit `KN_MOD "FORCED: Setting day=X, love=Y to trigger event Z"`
+2. Schedule it in a "bonus round" after the main storyline
+3. Emit `KN_MOD "FORCED: Setting day=X, love=Y to trigger event Z"`
 
 ---
 
-## Phase 5: Linearization & Output Generation
+## Phase 4: Linearization & Output Generation
 
 ### 5.1 Script Assembly
 **What**: Walk the scheduled events in order and inline their label content.
@@ -329,27 +232,27 @@ For each `(day, timeOfDay, location, event)` in the schedule:
    KN_MOD "═══ DAY [day] — [timeOfDay] — [location] ═══"
    ```
 2. Resolve the event's label from the global label index
-3. Use `labelLookup`-style logic to extract the full label body (following inner calls)
-4. Apply existing KNMod transformation to the extracted body:
+2. Use `labelLookup`-style logic to extract the full label body (following inner calls)
+3. Apply existing KNMod transformation to the extracted body:
    - Retain blocks (python, screen, image, etc.) verbatim
    - Wrap control flow as `KN_MOD "..."`
    - Pass through dialogue
-5. For `menu:` choices: emit ALL branches sequentially with choice text as `KN_MOD`:
+4. For `menu:` choices: emit ALL branches sequentially with choice text as `KN_MOD`:
    ```
    KN_MOD "CHOICE: [choice text]"
    [branch content]
    KN_MOD "CHOICE: [other choice text]"  
    [other branch content]
    ```
-6. For `if/elif/else` branches: emit ALL branches:
+5. For `if/elif/else` branches: emit ALL branches:
    ```
    KN_MOD "PATH: if [condition]"
    [if-branch content]
    KN_MOD "PATH: else [condition]"
    [else-branch content]
    ```
-7. When encountering `jump` to another content label → inline that label's content (with recursion protection via a visited set)
-8. When encountering `call` → inline similarly but mark entry/exit
+6. When encountering `jump` to another content label → inline that label's content (with recursion protection via a visited set)
+7. When encountering `call` → inline similarly but mark entry/exit
 
 ### 5.2 Cross-File Label Inlining
 **What**: When a label `jump`s or `call`s another label from a different file, resolve and inline it.
@@ -385,7 +288,7 @@ For `jump expression current_room` and similar:
 
 ---
 
-## Phase 6: Implementation Plan (Concrete Steps)
+## Phase 5: Implementation Plan (Concrete Steps)
 
 ### Step 1: Multi-File Parser Infrastructure
 **File**: `org.bullithulli.feature.SandboxScanner.java`
@@ -395,21 +298,14 @@ For `jump expression current_room` and similar:
 - Build merged `pathMatrix`
 - **Tests**: Unit tests with multi-file test fixtures in `src/test/resources/sandbox/`
 
-### Step 2: Variable & State Extractor  
-**File**: `org.bullithulli.feature.sandbox.StateExtractor.java`
-- Regex-based extraction of `default`, `define`, `$` assignments
-- Variable classification heuristics
-- Condition parser (basic: `var op value` clauses connected by `and`/`or`)
-- **Tests**: Parse variable declarations from test .rpy files
-
-### Step 3: Event System Detector
+### Step 2: Event System Detector
 **File**: `org.bullithulli.feature.sandbox.EventDetector.java`  
 - Pattern matching for Event class instantiation
 - Pattern matching for conditional jump chains in room labels
 - Build event registry with conditions
 - **Tests**: Detect events from sample sandbox game fragments
 
-### Step 4: Dependency Graph & Scheduler
+### Step 3: Dependency Graph & Scheduler
 **File**: `org.bullithulli.feature.sandbox.EventScheduler.java`
 - Build dependency DAG from event conditions
 - Topological sort with (day, time, location) ordering
@@ -417,7 +313,7 @@ For `jump expression current_room` and similar:
 - Greedy completeness pass for unscheduled events
 - **Tests**: Schedule ordering correctness
 
-### Step 5: Linearizer & Output Writer
+### Step 4: Linearizer & Output Writer
 **File**: `org.bullithulli.feature.SandboxKNMod.java`
 - Walk schedule, inline labels, apply KNMod transformation
 - Handle all branch types (if/else, menu, jump, call)
@@ -425,7 +321,7 @@ For `jump expression current_room` and similar:
 - Dynamic jump handling
 - **Tests**: End-to-end tests with sample sandbox games
 
-### Step 6: CLI Integration
+### Step 5: CLI Integration
 **File**: Modify `Modder2.java`
 - Add `SANDBOX_KNMOD` feature option
 - Accept `--file=<directory>` (not single file)
@@ -541,7 +437,7 @@ init python:
 Create `src/test/resources/sandbox/` with:
 1. `simple_sandbox/` — 3 rooms, 2 days, 5 events, direct conditional jumps
 2. `event_class_sandbox/` — Event class registration pattern
-3. `complex_sandbox/` — Real-world-like structure with 10+ rooms, relationship vars, seen sets
+2. `complex_sandbox/` — Real-world-like structure with 10+ rooms, relationship vars, seen sets
 
 ### Integration Tests
 - End-to-end: input directory → output single .rpy → verify output contains all events in correct order
@@ -571,12 +467,11 @@ java -jar modder-2.jar --feature=SANDBOX_KNMOD \
 ## Implementation Priority Order
 
 1. **Multi-file scanning + Global label index** (foundation for everything)
-2. **Variable/state extraction** (needed to understand conditions)  
-3. **Inter-label CFG + call graph** (needed to know what connects to what)
-4. **Event detection** (the core sandbox-specific logic)
-5. **Scheduler + state simulation** (orders events correctly)
-6. **Linearizer with cross-file inlining** (produces output)
-7. **CLI integration** (makes it usable)
-8. **Edge cases & polish** (dynamic jumps, forced scheduling, error handling)
+2. **Inter-label CFG + call graph** (needed to know what connects to what)
+3. **Event detection** (the core sandbox-specific logic)
+4. **Scheduler + state simulation** (orders events correctly)
+5. **Linearizer with cross-file inlining** (produces output)
+6. **CLI integration** (makes it usable)
+7. **Edge cases & polish** (dynamic jumps, forced scheduling, error handling)
 
 Each step is independently testable and builds on the previous one.
